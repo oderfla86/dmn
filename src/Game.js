@@ -1,6 +1,12 @@
 import './App.css';
 import { useRef, useState } from 'react';
-import { searchTileForSimulation, placePlayerTile, tilesAvailableForPlayer, disablePlayerHand } from './Util';
+import { 
+  searchTileForSimulation, 
+  placePlayerTile, 
+  tilesAvailableForPlayer, 
+  disablePlayerHand,
+  updatePlayerSelectedTile,
+  createDummyTiles } from './Util';
 
 function Game(props) {
 
@@ -9,6 +15,7 @@ function Game(props) {
   let rightLeaf = useRef(-1);
   let gameBlocked = useRef(0);
   let gameOver = useRef(false);
+  let selectedTile = useRef(null);
 
   const [table, setTable] = useState([]);
   const [player1, setPlayer1] = useState(props.data.player1);
@@ -28,12 +35,32 @@ function getTileHandIndex(tile){
   }
 }
 
+function dummyTilePressed(tile){  
+  //leftValue -1 left side clicked
+  //leftValue -2 right side clicked 
+
+  let updatedPlayStatus = placePlayerTile(selectedTile.current, leftLeaf.current, rightLeaf.current, table, tile.leftValue === -1 ? true : false);
+  leftLeaf.current = updatedPlayStatus.tile.leftLeaf !== null ? updatedPlayStatus.tile.leftLeaf : leftLeaf.current;
+  rightLeaf.current = updatedPlayStatus.tile.rightLeaf !== null ? updatedPlayStatus.tile.rightLeaf : rightLeaf.current;
+  let tileIndex = getTileHandIndex(selectedTile.current);
+  player1.splice(tileIndex, 1);
+  setTable([...updatedPlayStatus.table]);
+  setPlayer1([...disablePlayerHand(player1)]);
+    if (player1.length === 0){
+      gameOver.current = true;
+      console.log('GAME IS OVER');
+    }
+    else{
+      simulateOtherPlayersTurn();
+    }
+}
+
 function playerSubmitsAction(tile) {
   console.log('Player plays tile:', tile);
 
   let tileIndex = getTileHandIndex(tile);
-  player1.splice(tileIndex, 1);
   if (table.length === 0){
+    player1.splice(tileIndex, 1);
     tile.isStartingTile = true;
     leftLeaf.current = tile.leftValue;
     rightLeaf.current = tile.rightValue;
@@ -43,18 +70,21 @@ function playerSubmitsAction(tile) {
     simulateOtherPlayersTurn();
   }
   else{
-    let updatedPlayStatus = placePlayerTile(tile, leftLeaf.current, rightLeaf.current, table);
-    leftLeaf.current = updatedPlayStatus.tile.leftLeaf !== null ? updatedPlayStatus.tile.leftLeaf : leftLeaf.current;
-    rightLeaf.current = updatedPlayStatus.tile.rightLeaf !== null ? updatedPlayStatus.tile.rightLeaf : rightLeaf.current;
-    setTable([...updatedPlayStatus.table]);
-    setPlayer1([...disablePlayerHand(player1)]);
-    if (player1.length === 0){
-      gameOver.current = true;
-      console.log('GAME IS OVER');
-    }
-    else{
-      simulateOtherPlayersTurn();
-    }
+    setPlayer1([...updatePlayerSelectedTile(tile, player1)]);
+    selectedTile.current = tile;
+    setTable([...createDummyTiles(table, tile)]);
+    // let updatedPlayStatus = placePlayerTile(tile, leftLeaf.current, rightLeaf.current, table);
+    // leftLeaf.current = updatedPlayStatus.tile.leftLeaf !== null ? updatedPlayStatus.tile.leftLeaf : leftLeaf.current;
+    // rightLeaf.current = updatedPlayStatus.tile.rightLeaf !== null ? updatedPlayStatus.tile.rightLeaf : rightLeaf.current;
+    // setTable([...updatedPlayStatus.table]);
+    // setPlayer1([...disablePlayerHand(player1)]);
+    // if (player1.length === 0){
+    //   gameOver.current = true;
+    //   console.log('GAME IS OVER');
+    // }
+    // else{
+    //   simulateOtherPlayersTurn();
+    // }
   }
 }
 
@@ -113,6 +143,7 @@ async function simulateOtherPlayersTurn(){
       simulateOtherPlayersTurn();
     }
     else{
+
       //we need to insert dummy button on the board at the ends
       //so player can have the option of playing on either side
     }
@@ -140,7 +171,7 @@ async function simulateOtherPlayersTurn(){
           }}
         >
           {player1.map(function(object){
-            return <button onClick={() => playerSubmitsAction(object)} disabled={!object.enabled} style={{width:'30px', height:'50px', marginRight:'5px'}} key={object.name}>{object.name}</button>;
+            return <button onClick={() => playerSubmitsAction(object)} disabled={!object.enabled} style={{width:'30px', height:'50px', marginRight:'5px', background:object.isSelected ? '#90ee90' : null }} key={object.name}>{object.name}</button>;
           })}
         </div>
         <div
@@ -192,8 +223,8 @@ async function simulateOtherPlayersTurn(){
         <div style={{top: '50%', left:'0', right:'0',position: 'fixed', marginRight: 'auto', marginLeft:'auto'}}>
         {table.map(function(object){
             return object.leftValue !== object.rightValue ?
-            <button disabled={!object.enabled} style={{width:'50px', height:'30px', background:object.isStartingTile ? '#90ee90' : null }} key={object.name}>{object.name}</button>
-            : <button disabled={!object.enabled} style={{width:'30px', height:'50px', background:object.isStartingTile ? '#90ee90' : null }} key={object.name}>{object.name}</button>;
+            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'50px', height:'30px', background:object.isStartingTile ? '#FFC300' : null }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button> : 
+            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'30px', height:'50px', background:object.isStartingTile ? '#FFC300' : null }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button>;
           })}
         </div>
         </div>

@@ -9,6 +9,9 @@ class Tile {
     this.leftLeaf = -1;
     this.enabled = true;
     this.isStartingTile = false;
+    this.isSelected = false;
+    this.canPlayLeft = false;
+    this.canPlayRight = false;
   }
 }
 
@@ -33,6 +36,16 @@ export function createGame() {
   dealTilesToPlayers(tilePool);
 
   return startGame();
+}
+
+function startGame() {
+  return {
+    'table': table,
+    'player1': player1,
+    'player2': player2,
+    'player3': player3,
+    'player4': player4
+  }
 }
 
 function createTiles() {
@@ -123,28 +136,27 @@ export function searchTileForSimulation(playerHand, leftLeaf, rightLeaf, table) 
 
 export function tilesAvailableForPlayer(playerHand, leftLeaf, rightLeaf) {
   let blocked = true;
-  let canPlayLeft = false;
-  let canPlayRight = false;
   for (let i = 0; i < playerHand.length; i++) {
+    playerHand[i].canPlayLeft = false;
+    playerHand[i].canPlayRight = false;
     if (playerHand[i].rightValue !== leftLeaf && playerHand[i].leftValue !== leftLeaf && playerHand[i].rightValue !== rightLeaf && playerHand[i].leftValue !== rightLeaf) {
       playerHand[i].enabled = false;
     }
     else {
       playerHand[i].enabled = true;
-      if (playerHand[i].rightValue === leftLeaf || playerHand[i].leftLeaf === leftLeaf){
-        canPlayLeft = true;
+      if (playerHand[i].rightValue === leftLeaf || playerHand[i].leftValue === leftLeaf){
+        playerHand[i].canPlayLeft = true;
       }
-      else{
-        canPlayRight = true;
+      if (playerHand[i].rightValue === rightLeaf || playerHand[i].leftValue === rightLeaf){
+        playerHand[i].canPlayRight = true;
       }
       blocked = false;
     }
   }
+  console.log(playerHand);
   return {
     'playerHand': playerHand,
     'blocked': blocked,
-    'canPlayLeft': canPlayLeft,
-    'canPlayRight' : canPlayRight,
   }
 }
 
@@ -155,22 +167,23 @@ export function disablePlayerHand(playerHand) {
   return playerHand;
 }
 
-export function placePlayerTile(playerTile, leftLeaf, rightLeaf, table) {
-
+export function placePlayerTile(playerTile, leftLeaf, rightLeaf, table, isLeftSideClicked) {
+  removeDummyTiles(table);
   let newTile = null;
-  let blocked = true;
 
-  if (playerTile.rightValue === leftLeaf || playerTile.leftValue === leftLeaf) {
-    newTile = playerTile;
-    newTile.leftLeaf = playerTile.rightValue === leftLeaf ? playerTile.leftValue : playerTile.rightValue;
-    newTile.rightLeaf = null;
-    newTile.name =
-      playerTile.rightValue === leftLeaf
-        ? playerTile.leftValue + ":" + playerTile.rightValue
-        : playerTile.rightValue + ":" + playerTile.leftValue;
-    table.unshift(newTile);
-    blocked = false;
-  } else if (playerTile.rightValue === rightLeaf || playerTile.leftValue === rightLeaf) {
+  if (isLeftSideClicked){
+    //we know user wants to play on the left side of the table
+      newTile = playerTile;
+      newTile.leftLeaf = playerTile.rightValue === leftLeaf ? playerTile.leftValue : playerTile.rightValue;
+      newTile.rightLeaf = null;
+      newTile.name =
+        playerTile.rightValue === leftLeaf
+          ? playerTile.leftValue + ":" + playerTile.rightValue
+          : playerTile.rightValue + ":" + playerTile.leftValue;
+      table.unshift(newTile);
+  }
+  else{
+    //user clicked on the right side of the table
     newTile = playerTile;
     newTile.rightLeaf = playerTile.rightValue === rightLeaf ? playerTile.leftValue : playerTile.rightValue;
     newTile.leftLeaf = null;
@@ -179,21 +192,49 @@ export function placePlayerTile(playerTile, leftLeaf, rightLeaf, table) {
         ? playerTile.rightValue + ":" + playerTile.leftValue
         : playerTile.leftValue + ":" + playerTile.rightValue;
     table.push(newTile);
-    blocked = false;
   }
+
   return {
     'tile': newTile,
     'table': table,
-    'blocked': blocked,
   }
 }
 
-function startGame() {
-  return {
-    'table': table,
-    'player1': player1,
-    'player2': player2,
-    'player3': player3,
-    'player4': player4
+export function updatePlayerSelectedTile(tile, playerHand) {
+  for (let i = 0; i < playerHand.length; i++) {
+    if (playerHand[i].id === tile.id){
+      playerHand[i].isSelected = true;
+    }
+    else{
+      playerHand[i].isSelected = false;
+    }
   }
+  return playerHand;
+}
+
+export function createDummyTiles(table, tile) {
+  table = removeDummyTiles(table);
+  if (tile.canPlayLeft){
+    let t = new Tile(-1,-2);
+      table.unshift(t);
+  }
+
+  if (tile.canPlayRight){
+    let t = new Tile(-2,-1);
+    table.push(t);
+  }
+
+  return table;
+}
+
+function removeDummyTiles(table){
+  if (table[0].leftValue < 0){
+    table.splice(0, 1);
+  }
+
+  if (table[table.length - 1].leftValue < 0){
+    table.splice(table.length - 1, 1);
+  }
+
+  return table;
 }
