@@ -22,6 +22,10 @@ function Game(props) {
   const [player2, setP2] = useState(props.data.player2);
   const [player3, setP3] = useState(props.data.player3);
   const [player4, setP4] = useState(props.data.player4);
+  const [isPlayer1Blocked, setPlayer1Blocked] = useState(false);
+  const [isPlayer2Blocked, setPlayer2Blocked] = useState(false);
+  const [isPlayer3Blocked, setPlayer3Blocked] = useState(false);
+  const [isPlayer4Blocked, setPlayer4Blocked] = useState(false);
 
 function timeout() {
   return new Promise( res => setTimeout(res, DELAY) );
@@ -38,7 +42,7 @@ function getTileHandIndex(tile){
 function dummyTilePressed(tile){  
   //leftValue -1 left side clicked
   //leftValue -2 right side clicked 
-
+  gameBlocked.current = 0;
   let updatedPlayStatus = placePlayerTile(selectedTile.current, leftLeaf.current, rightLeaf.current, table, tile.leftValue === -1 ? true : false);
   leftLeaf.current = updatedPlayStatus.tile.leftLeaf !== null ? updatedPlayStatus.tile.leftLeaf : leftLeaf.current;
   rightLeaf.current = updatedPlayStatus.tile.rightLeaf !== null ? updatedPlayStatus.tile.rightLeaf : rightLeaf.current;
@@ -102,7 +106,28 @@ async function simulateOtherPlayersTurn(){
     await timeout();
     let simulationturn = searchTileForSimulation(getPlayerHand(turn), leftLeaf.current, rightLeaf.current, table);
       if (simulationturn.blocked) {
+        debugger;
         console.log(`Player ${turn} passes the turn`);
+        switch (turn) {
+          case 1:
+            setPlayer2Blocked(true);
+            await timeout();
+            setPlayer2Blocked(false);
+            break;
+          case 2:
+            setPlayer3Blocked(true);
+            await timeout();
+            setPlayer3Blocked(false);
+            break;
+          case 3:
+            setPlayer4Blocked(true);
+            await timeout();
+            setPlayer4Blocked(false);
+            break;
+          default:
+            break;
+        }
+
         gameBlocked.current += 1;
         if (gameBlocked.current === 4) {
           console.error("Game is blocked. No more available moves");
@@ -127,6 +152,10 @@ async function simulateOtherPlayersTurn(){
     let playerTurnCheck = tilesAvailableForPlayer(player1, leftLeaf.current, rightLeaf.current);
     setPlayer1([...playerTurnCheck.playerHand]);
     if (playerTurnCheck.blocked) {
+      debugger;
+      setPlayer1Blocked(true);
+      await timeout();
+      setPlayer1Blocked(false);
       gameBlocked.current += 1;
       simulateOtherPlayersTurn();
     }
@@ -143,8 +172,8 @@ async function simulateOtherPlayersTurn(){
         <div
           style={{
             background: '#7393B3',
-            width: '1450px',
-            height: '800px',
+            width: '100%',
+            height: '100%',
             position: 'absolute', left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)'
           }}
@@ -164,16 +193,50 @@ async function simulateOtherPlayersTurn(){
         </div>
         <div
           style={{
+            backgroundColor: '#36454F',
+            textAlign: 'center',
+            borderRadius:'5px',
+            color: 'white',
+            width: '70px',
+            height: '30px',
+            position: 'absolute', left: '65%', top: '93%',
+            transform: 'translate(-50%, -50%)',
+            opacity: isPlayer1Blocked ? "1" : "0",
+            transition: "all 1s",
+            visibility: isPlayer1Blocked ? "visible" : 'hidden',
+          }}
+        >
+        Blocked
+        </div>
+        <div
+          style={{
             backgroundColor: 'transparent',
             width: '250px',
             height: '50px',
-            position: 'absolute', left: '95%', top: '50%',
+            position: 'absolute', left: '97%', top: '50%',
             transform: 'translate(-50%, -50%) rotate(90deg)'
           }}
         div>
           {player2.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{object.name}</button>;
           })}
+        </div>
+        <div
+          style={{
+            backgroundColor: '#36454F',
+            textAlign: 'center',
+            borderRadius:'5px',
+            color: 'white',
+            width: '70px',
+            height: '30px',
+            position: 'absolute', left: '97%', top: '25%',
+            transform: 'translate(-50%, -50%)',
+            opacity: isPlayer2Blocked ? "1" : "0",
+            transition: "all 1s",
+            visibility: isPlayer2Blocked ? "visible" : 'hidden',
+          }}
+        >
+        Blocked
         </div>
         <div style={{
             backgroundColor: 'transparent',
@@ -188,11 +251,28 @@ async function simulateOtherPlayersTurn(){
         </div>
         <div
           style={{
+            backgroundColor: '#36454F',
+            textAlign: 'center',
+            borderRadius:'5px',
+            color: 'white',
+            width: '70px',
+            height: '30px',
+            position: 'absolute', left: '65%', top: '5%',
+            transform: 'translate(-50%, -50%)',
+            opacity: isPlayer3Blocked ? "1" : "0",
+            transition: "all 1s",
+            visibility: isPlayer3Blocked ? "visible" : 'hidden',
+          }}
+        >
+        Blocked
+        </div>
+        <div
+          style={{
             backgroundColor: 'transparent',
             width: '300px',
             height: '50px',
             textAlign: 'center',
-            position: 'absolute', left: '5%', top: '50%',
+            position: 'absolute', left: '3%', top: '50%',
             transform: 'translate(-50%, -50%) rotate(90deg)'
           }}
         >
@@ -200,10 +280,27 @@ async function simulateOtherPlayersTurn(){
             return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
           })}
         </div>
+        <div
+          style={{
+            backgroundColor: '#36454F',
+            textAlign: 'center',
+            borderRadius:'5px',
+            color: 'white',
+            width: '70px',
+            height: '30px',
+            position: 'absolute', left: '3%', top: '25%',
+            transform: 'translate(-50%, -50%)',
+            opacity: isPlayer4Blocked ? "1" : "0",
+            transition: "all 1s",
+            visibility: isPlayer4Blocked ? "visible" : 'hidden',
+          }}
+        >
+        Blocked
+        </div>
         <div style={{
             backgroundColor: '#36454F',
-            width: '1200px',
-            height: '600px',
+            width: '85%',
+            height: '75%',
             position: 'absolute', left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)',
             textAlign: 'center',
@@ -211,8 +308,8 @@ async function simulateOtherPlayersTurn(){
         <div style={{top: '50%', left:'0', right:'0',position: 'fixed', marginRight: 'auto', marginLeft:'auto'}}>
         {table.map(function(object){
             return object.leftValue !== object.rightValue ?
-            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'55px', height:'35px', background:object.isStartingTile ? '#FFC300' : null, borderColor:'black' }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button> : 
-            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'35px', height:'55px', background:object.isStartingTile ? '#FFC300' : null, borderColor:'black' }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button>;
+            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'50px', height:'30px', background:object.isStartingTile ? '#FFC300' : null, borderColor:'black' }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button> : 
+            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'30px', height:'50px', background:object.isStartingTile ? '#FFC300' : null, borderColor:'black' }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button>;
           })}
         </div>
         </div>
