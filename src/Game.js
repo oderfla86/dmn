@@ -14,7 +14,6 @@ function Game(props) {
   let leftLeaf = useRef(-1);
   let rightLeaf = useRef(-1);
   let gameBlocked = useRef(0);
-  let gameOver = useRef(false);
   let selectedTile = useRef(null);
 
   const [table, setTable] = useState([]);
@@ -26,6 +25,7 @@ function Game(props) {
   const [isPlayer2Blocked, setPlayer2Blocked] = useState(false);
   const [isPlayer3Blocked, setPlayer3Blocked] = useState(false);
   const [isPlayer4Blocked, setPlayer4Blocked] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
 
 function timeout() {
   return new Promise( res => setTimeout(res, DELAY) );
@@ -51,7 +51,7 @@ function dummyTilePressed(tile){
   setTable([...updatedPlayStatus.table]);
   setPlayer1([...disablePlayerHand(player1)]);
     if (player1.length === 0){
-      gameOver.current = true;
+      setIsGameOver(true);
       console.log('GAME IS OVER');
     }
     else{
@@ -106,7 +106,6 @@ async function simulateOtherPlayersTurn(){
     await timeout();
     let simulationturn = searchTileForSimulation(getPlayerHand(turn), leftLeaf.current, rightLeaf.current, table);
       if (simulationturn.blocked) {
-        debugger;
         console.log(`Player ${turn} passes the turn`);
         switch (turn) {
           case 1:
@@ -131,7 +130,7 @@ async function simulateOtherPlayersTurn(){
         gameBlocked.current += 1;
         if (gameBlocked.current === 4) {
           console.error("Game is blocked. No more available moves");
-          gameOver.current = true;
+          setIsGameOver(true);
           break;
         }
       } else {
@@ -142,13 +141,13 @@ async function simulateOtherPlayersTurn(){
         updateHandData(turn, simulationturn.hand);
         if (simulationturn.hand.length === 0){
           console.log('Game is Over');
-          gameOver.current = true;
+          setIsGameOver(true);
           break;
         }
       }
       turn += 1;
   }
-  if (!gameOver.current){
+  if (!isGameOver){
     let playerTurnCheck = tilesAvailableForPlayer(player1, leftLeaf.current, rightLeaf.current);
     setPlayer1([...playerTurnCheck.playerHand]);
     if (playerTurnCheck.blocked) {
@@ -218,7 +217,7 @@ async function simulateOtherPlayersTurn(){
           }}
         div>
           {player2.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{isGameOver ? object.name : ''}</button>;
           })}
         </div>
         <div
@@ -246,7 +245,7 @@ async function simulateOtherPlayersTurn(){
             transform: 'translate(-50%, -50%)'
           }}>
           {player3.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{isGameOver ? object.name : ''}</button>;
           })}
         </div>
         <div
@@ -277,7 +276,7 @@ async function simulateOtherPlayersTurn(){
           }}
         >
         {player4.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{isGameOver ? object.name : ''}</button>;
           })}
         </div>
         <div
