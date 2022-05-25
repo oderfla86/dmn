@@ -218,7 +218,7 @@ async function simulateOtherPlayersTurn(){
           }}
         div>
           {player2.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{object.name}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
           })}
         </div>
         <div
