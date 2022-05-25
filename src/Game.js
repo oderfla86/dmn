@@ -10,7 +10,7 @@ import {
 
 function Game(props) {
 
-  const DELAY = 2000;
+  const DELAY = 1000;
   let leftLeaf = useRef(-1);
   let rightLeaf = useRef(-1);
   let gameBlocked = useRef(0);
@@ -73,18 +73,6 @@ function playerSubmitsAction(tile) {
     setPlayer1([...updatePlayerSelectedTile(tile, player1)]);
     selectedTile.current = tile;
     setTable([...createDummyTiles(table, tile)]);
-    // let updatedPlayStatus = placePlayerTile(tile, leftLeaf.current, rightLeaf.current, table);
-    // leftLeaf.current = updatedPlayStatus.tile.leftLeaf !== null ? updatedPlayStatus.tile.leftLeaf : leftLeaf.current;
-    // rightLeaf.current = updatedPlayStatus.tile.rightLeaf !== null ? updatedPlayStatus.tile.rightLeaf : rightLeaf.current;
-    // setTable([...updatedPlayStatus.table]);
-    // setPlayer1([...disablePlayerHand(player1)]);
-    // if (player1.length === 0){
-    //   gameOver.current = true;
-    //   console.log('GAME IS OVER');
-    // }
-    // else{
-    //   simulateOtherPlayersTurn();
-    // }
   }
 }
 
@@ -154,7 +142,7 @@ async function simulateOtherPlayersTurn(){
     <div>
         <div
           style={{
-            backgroundColor: '#282c34',
+            background: '#7393B3',
             width: '1450px',
             height: '800px',
             position: 'absolute', left: '50%', top: '50%',
@@ -163,44 +151,44 @@ async function simulateOtherPlayersTurn(){
         />
         <div
           style={{
-            backgroundColor: '#282c34',
-            width: '300px',
-            height: '50px',
-            position: 'absolute', left: '50%', top: '95%',
+            backgroundColor: 'transparent',
+            width: '320px',
+            height: '60px',
+            position: 'absolute', left: '50%', top: '93%',
             transform: 'translate(-50%, -50%)'
           }}
         >
           {player1.map(function(object){
-            return <button onClick={() => playerSubmitsAction(object)} disabled={!object.enabled} style={{width:'30px', height:'50px', marginRight:'5px', background:object.isSelected ? '#90ee90' : null }} key={object.name}>{object.name}</button>;
+            return <button onClick={() => playerSubmitsAction(object)} disabled={!object.enabled} style={{width:'40px', height:'60px', marginRight:'5px', background:object.isSelected ? '#90ee90' : null, borderColor:'black' }} key={object.name}>{object.name}</button>;
           })}
         </div>
         <div
           style={{
-            backgroundColor: '#282c34',
-            width: '300px',
+            backgroundColor: 'transparent',
+            width: '250px',
             height: '50px',
             position: 'absolute', left: '95%', top: '50%',
             transform: 'translate(-50%, -50%) rotate(90deg)'
           }}
         div>
           {player2.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{object.name}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
           })}
         </div>
         <div style={{
-            backgroundColor: '#282c34',
-            width: '300px',
+            backgroundColor: 'transparent',
+            width: '250px',
             height: '50px',
             position: 'absolute', left: '50%', top: '5%',
             transform: 'translate(-50%, -50%)'
           }}>
           {player3.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{object.name}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
           })}
         </div>
         <div
           style={{
-            backgroundColor: '#282c34',
+            backgroundColor: 'transparent',
             width: '300px',
             height: '50px',
             textAlign: 'center',
@@ -209,11 +197,11 @@ async function simulateOtherPlayersTurn(){
           }}
         >
         {player4.map(function(object, i){
-            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{object.name}</button>;
+            return <button disabled={!object.enabled} style={{width:'30px', height:'50px',  marginRight:'5px'}} key={object.name}>{''}</button>;
           })}
         </div>
         <div style={{
-            backgroundColor: 'white',
+            backgroundColor: '#36454F',
             width: '1200px',
             height: '600px',
             position: 'absolute', left: '50%', top: '50%',
@@ -223,8 +211,8 @@ async function simulateOtherPlayersTurn(){
         <div style={{top: '50%', left:'0', right:'0',position: 'fixed', marginRight: 'auto', marginLeft:'auto'}}>
         {table.map(function(object){
             return object.leftValue !== object.rightValue ?
-            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'50px', height:'30px', background:object.isStartingTile ? '#FFC300' : null }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button> : 
-            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'30px', height:'50px', background:object.isStartingTile ? '#FFC300' : null }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button>;
+            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'55px', height:'35px', background:object.isStartingTile ? '#FFC300' : null, borderColor:'black' }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button> : 
+            <button onClick={object.leftValue < 0 ?() => dummyTilePressed(object) : null} disabled={!object.enabled} style={{width:'35px', height:'55px', background:object.isStartingTile ? '#FFC300' : null, borderColor:'black' }} key={object.name}>{object.leftValue >= 0 ? object.name : 'select'}</button>;
           })}
         </div>
         </div>
