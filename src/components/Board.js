@@ -6,6 +6,7 @@ function Board(props) {
         width: "85%",
         height: "75%",
         position: "absolute",
+        borderRadius: "10px",
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -50%)",

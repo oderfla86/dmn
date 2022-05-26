@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import Board from "./Board";
 import Player from "./Player";
+import Score from "./Score";
 import {
   searchTileForSimulation,
   placePlayerTile,
@@ -8,6 +9,8 @@ import {
   disablePlayerHand,
   updatePlayerSelectedTile,
   createBoardPlaceholderTiles,
+  calculatePointsForWinners,
+  calculateBlockedGameWinner,
 } from "../Util";
 
 function Game(props) {
@@ -56,6 +59,7 @@ function Game(props) {
   let leftLeaf = useRef(-1);
   let rightLeaf = useRef(-1);
   let gameBlocked = useRef(0);
+  let gameOver = useRef(false);
   let selectedTile = useRef(null);
 
   const [table, setTable] = useState([]);
@@ -68,6 +72,8 @@ function Game(props) {
   const [isPlayer3Blocked, setPlayer3Blocked] = useState(false);
   const [isPlayer4Blocked, setPlayer4Blocked] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [team1Points, setTeam1Points] = useState(0);
+  const [team2Points, setTeam2Points] = useState(0);
 
   function timeout() {
     return new Promise((res) => setTimeout(res, DELAY));
@@ -107,6 +113,7 @@ function Game(props) {
     if (player1.length === 0) {
       setIsGameOver(true);
       console.log("GAME IS OVER");
+      setTeam1Points(calculatePointsForWinners(player2, player4));
     } else {
       simulateOtherPlayersTurn();
     }
@@ -162,7 +169,33 @@ function Game(props) {
         rightLeaf.current,
         table
       );
-      if (simulationTurn.blocked && gameBlocked.current < 4) {
+      if (!simulationTurn.blocked) {
+        //player is not blocked, they play a tile
+        gameBlocked.current = 0;
+        leftLeaf.current =
+          simulationTurn.tile.leftLeaf !== null
+            ? simulationTurn.tile.leftLeaf
+            : leftLeaf.current;
+        rightLeaf.current =
+          simulationTurn.tile.rightLeaf !== null
+            ? simulationTurn.tile.rightLeaf
+            : rightLeaf.current;
+        setTable([...simulationTurn.table]);
+        updateHandData(turn, simulationTurn.hand);
+        if (simulationTurn.hand.length === 0) {
+          console.log("Game is Over");
+          gameOver.current = true;
+          if (turn === 1 || turn === 3) {
+            //AI won
+            setTeam2Points(calculatePointsForWinners(player1, player3));
+          } else {
+            setTeam1Points(calculatePointsForWinners(player2, player4));
+          }
+          turn = 5;
+        }
+        turn += 1;
+      } else {
+        debugger;
         console.log(`Player ${turn} passes the turn`);
         switch (turn) {
           case 1:
@@ -183,35 +216,27 @@ function Game(props) {
           default:
             break;
         }
-
+        turn += 1;
         gameBlocked.current += 1;
-        if (gameBlocked.current === 4) {
+        if (gameBlocked.current >= 4) {
           console.error("Game is blocked. No more available moves");
-          setIsGameOver(true);
-          break;
-        }
-      } else {
-        gameBlocked.current = 0;
-        leftLeaf.current =
-          simulationTurn.tile.leftLeaf !== null
-            ? simulationTurn.tile.leftLeaf
-            : leftLeaf.current;
-        rightLeaf.current =
-          simulationTurn.tile.rightLeaf !== null
-            ? simulationTurn.tile.rightLeaf
-            : rightLeaf.current;
-        setTable([...simulationTurn.table]);
-        updateHandData(turn, simulationTurn.hand);
-        if (simulationTurn.hand.length === 0) {
-          console.log("Game is Over");
+          let result = calculateBlockedGameWinner(
+            player1,
+            player2,
+            player3,
+            player4
+          );
+          if (result.winner === 0) {
+            setTeam1Points(team1Points + result.points);
+          } else if (result.winner === 1) {
+            setTeam2Points(team2Points + result.points);
+          }
+          gameOver.current = true;
           turn = 5;
-          setIsGameOver(true);
-          break;
         }
       }
-      turn += 1;
     }
-    if (!isGameOver) {
+    if (!gameOver.current) {
       let playerTurnCheck = tilesAvailableForPlayer(
         player1,
         leftLeaf.current,
@@ -225,6 +250,8 @@ function Game(props) {
         gameBlocked.current += 1;
         simulateOtherPlayersTurn();
       }
+    } else {
+      setIsGameOver(gameOver.current);
     }
   }
 
@@ -241,6 +268,7 @@ function Game(props) {
           transform: "translate(-50%, -50%)",
         }}
       />
+      <Score team1Points={team1Points} team2Points={team2Points} />
       <Player
         style={p1_styles}
         isPlayer={true}
