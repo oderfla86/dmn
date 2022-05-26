@@ -156,13 +156,13 @@ function Game(props) {
     let turn = 1;
     while (turn < 4) {
       await timeout();
-      let simulationturn = searchTileForSimulation(
+      let simulationTurn = searchTileForSimulation(
         getPlayerHand(turn),
         leftLeaf.current,
         rightLeaf.current,
         table
       );
-      if (simulationturn.blocked) {
+      if (simulationTurn.blocked && gameBlocked.current < 4) {
         console.log(`Player ${turn} passes the turn`);
         switch (turn) {
           case 1:
@@ -193,17 +193,18 @@ function Game(props) {
       } else {
         gameBlocked.current = 0;
         leftLeaf.current =
-          simulationturn.tile.leftLeaf !== null
-            ? simulationturn.tile.leftLeaf
+          simulationTurn.tile.leftLeaf !== null
+            ? simulationTurn.tile.leftLeaf
             : leftLeaf.current;
         rightLeaf.current =
-          simulationturn.tile.rightLeaf !== null
-            ? simulationturn.tile.rightLeaf
+          simulationTurn.tile.rightLeaf !== null
+            ? simulationTurn.tile.rightLeaf
             : rightLeaf.current;
-        setTable([...simulationturn.table]);
-        updateHandData(turn, simulationturn.hand);
-        if (simulationturn.hand.length === 0) {
+        setTable([...simulationTurn.table]);
+        updateHandData(turn, simulationTurn.hand);
+        if (simulationTurn.hand.length === 0) {
           console.log("Game is Over");
+          turn = 5;
           setIsGameOver(true);
           break;
         }
