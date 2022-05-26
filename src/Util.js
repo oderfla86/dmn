@@ -168,7 +168,7 @@ export function disablePlayerHand(playerHand) {
 }
 
 export function placePlayerTile(playerTile, leftLeaf, rightLeaf, table, isLeftSideClicked) {
-  removeDummyTiles(table);
+  removePlaceholderTilesFromBoard(table);
   let newTile = null;
 
   if (isLeftSideClicked){
@@ -212,8 +212,16 @@ export function updatePlayerSelectedTile(tile, playerHand) {
   return playerHand;
 }
 
-export function createDummyTiles(table, tile) {
-  table = removeDummyTiles(table);
+export function getTileHandIndex(tile, hand) {
+  for (let i = 0; i < hand.length; i++) {
+    if (hand[i].id === tile.id) {
+      return i;
+    }
+  }
+}
+
+export function createBoardPlaceholderTiles(table, tile) {
+  table = removePlaceholderTilesFromBoard(table);
   if (tile.canPlayLeft){
     let t = new Tile(-1,-2);
       table.unshift(t);
@@ -227,7 +235,7 @@ export function createDummyTiles(table, tile) {
   return table;
 }
 
-function removeDummyTiles(table){
+function removePlaceholderTilesFromBoard(table){
   if (table[0].leftValue < 0){
     table.splice(0, 1);
   }
