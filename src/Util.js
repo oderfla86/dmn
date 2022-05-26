@@ -22,6 +22,8 @@ let player4 = [];
 let tilePool = [];
 let table = [];
 
+const reducer = (prev, curr) => prev + curr;
+
 export function createGame() {
   console.log("Initialising game data");
   player1 = [];
@@ -278,4 +280,52 @@ function removePlaceholderTilesFromBoard(table) {
   }
 
   return table;
+}
+
+export function calculatePointsForWinners(hand_1, hand_2) {
+  debugger;
+  const sum_1 = hand_1.reduce((accumulator, tile) => {
+    return accumulator + tile.total;
+  }, 0);
+
+  const sum_2 = hand_2.reduce((accumulator, tile) => {
+    return accumulator + tile.total;
+  }, 0);
+
+  return sum_1 + sum_2;
+}
+
+export function calculateBlockedGameWinner(hand_1, hand_2, hand_3, hand_4) {
+  const sum_1 = hand_1.reduce((accumulator, tile) => {
+    return accumulator + tile.total;
+  }, 0);
+
+  const sum_2 = hand_2.reduce((accumulator, tile) => {
+    return accumulator + tile.total;
+  }, 0);
+
+  const sum_3 = hand_3.reduce((accumulator, tile) => {
+    return accumulator + tile.total;
+  }, 0);
+
+  const sum_4 = hand_4.reduce((accumulator, tile) => {
+    return accumulator + tile.total;
+  }, 0);
+
+  if (sum_1 + sum_3 > sum_2 > sum_4) {
+    return {
+      winner: 1,
+      points: sum_1 + sum_3,
+    };
+  } else if (sum_1 + sum_3 < sum_2 > sum_4) {
+    return {
+      winner: 0,
+      points: sum_2 + sum_4,
+    };
+  } else {
+    return {
+      winner: -1,
+      points: 0,
+    };
+  }
 }
