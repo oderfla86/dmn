@@ -45,22 +45,22 @@ function Player(props) {
     );
   } else {
     return (
-    <div>
-      <div style={props.style}>
-        {props.hand.map(function (player_tile) {
-          return (
-            <button
-              disabled={!player_tile.enabled}
-              style={props.tileStyle}
-              key={player_tile.name}
-            >
-              {props.isGameOver ? player_tile.name : ""}
-            </button>
-          );
-        })}
+      <div>
+        <div style={props.style}>
+          {props.hand.map(function (player_tile) {
+            return (
+              <button
+                disabled={!player_tile.enabled}
+                style={props.tileStyle}
+                key={player_tile.name}
+              >
+                {props.isGameOver ? player_tile.name : ""}
+              </button>
+            );
+          })}
+        </div>
+        <div style={props.blockedStyle}>Blocked</div>
       </div>
-      <div style={props.blockedStyle}>Blocked</div>
-    </div>
     );
   }
 }

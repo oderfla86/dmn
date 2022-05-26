@@ -1,5 +1,4 @@
 function Board(props) {
-
   return (
     <div
       style={{
@@ -27,7 +26,9 @@ function Board(props) {
           return table_tile.leftValue !== table_tile.rightValue ? (
             <button
               onClick={
-                table_tile.leftValue < 0 ? () => props.boardTilePressed(table_tile) : null
+                table_tile.leftValue < 0
+                  ? () => props.boardTilePressed(table_tile)
+                  : null
               }
               disabled={!table_tile.enabled}
               style={{
@@ -43,7 +44,9 @@ function Board(props) {
           ) : (
             <button
               onClick={
-                table_tile.leftValue < 0 ? () => props.boardTilePressed(table_tile) : null
+                table_tile.leftValue < 0
+                  ? () => props.boardTilePressed(table_tile)
+                  : null
               }
               disabled={!table_tile.enabled}
               style={{
