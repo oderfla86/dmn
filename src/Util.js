@@ -23,7 +23,7 @@ let tilePool = [];
 let table = [];
 
 export function createGame() {
-  console.log('Initialising game data');
+  console.log("Initialising game data");
   player1 = [];
   player2 = [];
   player3 = [];
@@ -40,12 +40,12 @@ export function createGame() {
 
 function startGame() {
   return {
-    'table': table,
-    'player1': player1,
-    'player2': player2,
-    'player3': player3,
-    'player4': player4
-  }
+    table: table,
+    player1: player1,
+    player2: player2,
+    player3: player3,
+    player4: player4,
+  };
 }
 
 function createTiles() {
@@ -67,7 +67,6 @@ function shuffleTiles(arr) {
 }
 
 function dealTilesToPlayers(arr) {
-
   let index = 0;
   for (let i = 0; i < arr.length; i++) {
     index += 1;
@@ -93,7 +92,12 @@ function dealTilesToPlayers(arr) {
   }
 }
 
-export function searchTileForSimulation(playerHand, leftLeaf, rightLeaf, table) {
+export function searchTileForSimulation(
+  playerHand,
+  leftLeaf,
+  rightLeaf,
+  table
+) {
   let newTile = null;
   let blocked = true;
 
@@ -102,7 +106,10 @@ export function searchTileForSimulation(playerHand, leftLeaf, rightLeaf, table) 
 
     if (handTile.rightValue === leftLeaf || handTile.leftValue === leftLeaf) {
       newTile = handTile;
-      newTile.leftLeaf = handTile.rightValue === leftLeaf ? handTile.leftValue : handTile.rightValue;
+      newTile.leftLeaf =
+        handTile.rightValue === leftLeaf
+          ? handTile.leftValue
+          : handTile.rightValue;
       newTile.rightLeaf = null;
       newTile.name =
         handTile.rightValue === leftLeaf
@@ -112,9 +119,15 @@ export function searchTileForSimulation(playerHand, leftLeaf, rightLeaf, table) 
       table.unshift(newTile);
       blocked = false;
       break;
-    } else if (handTile.rightValue === rightLeaf || handTile.leftValue === rightLeaf) {
+    } else if (
+      handTile.rightValue === rightLeaf ||
+      handTile.leftValue === rightLeaf
+    ) {
       newTile = handTile;
-      newTile.rightLeaf = handTile.rightValue === rightLeaf ? handTile.leftValue : handTile.rightValue;
+      newTile.rightLeaf =
+        handTile.rightValue === rightLeaf
+          ? handTile.leftValue
+          : handTile.rightValue;
       newTile.leftLeaf = null;
       newTile.name =
         handTile.rightValue === rightLeaf
@@ -127,11 +140,11 @@ export function searchTileForSimulation(playerHand, leftLeaf, rightLeaf, table) 
     }
   }
   return {
-    'tile': newTile,
-    'hand': playerHand,
-    'table': table,
-    'blocked': blocked,
-  }
+    tile: newTile,
+    hand: playerHand,
+    table: table,
+    blocked: blocked,
+  };
 }
 
 export function tilesAvailableForPlayer(playerHand, leftLeaf, rightLeaf) {
@@ -139,15 +152,25 @@ export function tilesAvailableForPlayer(playerHand, leftLeaf, rightLeaf) {
   for (let i = 0; i < playerHand.length; i++) {
     playerHand[i].canPlayLeft = false;
     playerHand[i].canPlayRight = false;
-    if (playerHand[i].rightValue !== leftLeaf && playerHand[i].leftValue !== leftLeaf && playerHand[i].rightValue !== rightLeaf && playerHand[i].leftValue !== rightLeaf) {
+    if (
+      playerHand[i].rightValue !== leftLeaf &&
+      playerHand[i].leftValue !== leftLeaf &&
+      playerHand[i].rightValue !== rightLeaf &&
+      playerHand[i].leftValue !== rightLeaf
+    ) {
       playerHand[i].enabled = false;
-    }
-    else {
+    } else {
       playerHand[i].enabled = true;
-      if (playerHand[i].rightValue === leftLeaf || playerHand[i].leftValue === leftLeaf){
+      if (
+        playerHand[i].rightValue === leftLeaf ||
+        playerHand[i].leftValue === leftLeaf
+      ) {
         playerHand[i].canPlayLeft = true;
       }
-      if (playerHand[i].rightValue === rightLeaf || playerHand[i].leftValue === rightLeaf){
+      if (
+        playerHand[i].rightValue === rightLeaf ||
+        playerHand[i].leftValue === rightLeaf
+      ) {
         playerHand[i].canPlayRight = true;
       }
       blocked = false;
@@ -155,9 +178,9 @@ export function tilesAvailableForPlayer(playerHand, leftLeaf, rightLeaf) {
   }
   console.log(playerHand);
   return {
-    'playerHand': playerHand,
-    'blocked': blocked,
-  }
+    playerHand: playerHand,
+    blocked: blocked,
+  };
 }
 
 export function disablePlayerHand(playerHand) {
@@ -167,25 +190,36 @@ export function disablePlayerHand(playerHand) {
   return playerHand;
 }
 
-export function placePlayerTile(playerTile, leftLeaf, rightLeaf, table, isLeftSideClicked) {
-  removeDummyTiles(table);
+export function placePlayerTile(
+  playerTile,
+  leftLeaf,
+  rightLeaf,
+  table,
+  isLeftSideClicked
+) {
+  removePlaceholderTilesFromBoard(table);
   let newTile = null;
 
-  if (isLeftSideClicked){
+  if (isLeftSideClicked) {
     //we know user wants to play on the left side of the table
-      newTile = playerTile;
-      newTile.leftLeaf = playerTile.rightValue === leftLeaf ? playerTile.leftValue : playerTile.rightValue;
-      newTile.rightLeaf = null;
-      newTile.name =
-        playerTile.rightValue === leftLeaf
-          ? playerTile.leftValue + ":" + playerTile.rightValue
-          : playerTile.rightValue + ":" + playerTile.leftValue;
-      table.unshift(newTile);
-  }
-  else{
+    newTile = playerTile;
+    newTile.leftLeaf =
+      playerTile.rightValue === leftLeaf
+        ? playerTile.leftValue
+        : playerTile.rightValue;
+    newTile.rightLeaf = null;
+    newTile.name =
+      playerTile.rightValue === leftLeaf
+        ? playerTile.leftValue + ":" + playerTile.rightValue
+        : playerTile.rightValue + ":" + playerTile.leftValue;
+    table.unshift(newTile);
+  } else {
     //user clicked on the right side of the table
     newTile = playerTile;
-    newTile.rightLeaf = playerTile.rightValue === rightLeaf ? playerTile.leftValue : playerTile.rightValue;
+    newTile.rightLeaf =
+      playerTile.rightValue === rightLeaf
+        ? playerTile.leftValue
+        : playerTile.rightValue;
     newTile.leftLeaf = null;
     newTile.name =
       playerTile.rightValue === rightLeaf
@@ -195,44 +229,51 @@ export function placePlayerTile(playerTile, leftLeaf, rightLeaf, table, isLeftSi
   }
 
   return {
-    'tile': newTile,
-    'table': table,
-  }
+    tile: newTile,
+    table: table,
+  };
 }
 
 export function updatePlayerSelectedTile(tile, playerHand) {
   for (let i = 0; i < playerHand.length; i++) {
-    if (playerHand[i].id === tile.id){
+    if (playerHand[i].id === tile.id) {
       playerHand[i].isSelected = true;
-    }
-    else{
+    } else {
       playerHand[i].isSelected = false;
     }
   }
   return playerHand;
 }
 
-export function createDummyTiles(table, tile) {
-  table = removeDummyTiles(table);
-  if (tile.canPlayLeft){
-    let t = new Tile(-1,-2);
-      table.unshift(t);
+export function getTileHandIndex(tile, hand) {
+  for (let i = 0; i < hand.length; i++) {
+    if (hand[i].id === tile.id) {
+      return i;
+    }
+  }
+}
+
+export function createBoardPlaceholderTiles(table, tile) {
+  table = removePlaceholderTilesFromBoard(table);
+  if (tile.canPlayLeft) {
+    let t = new Tile(-1, -2);
+    table.unshift(t);
   }
 
-  if (tile.canPlayRight){
-    let t = new Tile(-2,-1);
+  if (tile.canPlayRight) {
+    let t = new Tile(-2, -1);
     table.push(t);
   }
 
   return table;
 }
 
-function removeDummyTiles(table){
-  if (table[0].leftValue < 0){
+function removePlaceholderTilesFromBoard(table) {
+  if (table[0].leftValue < 0) {
     table.splice(0, 1);
   }
 
-  if (table[table.length - 1].leftValue < 0){
+  if (table[table.length - 1].leftValue < 0) {
     table.splice(table.length - 1, 1);
   }
 
