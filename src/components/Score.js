@@ -16,6 +16,16 @@ function Score(props) {
       }}
     >
       <div>Scoreboard</div>
+      <div
+        style={{
+          fontSize: "5px",
+          right: "5%",
+          top: "10%",
+          position: "absolute",
+        }}
+      >
+        v0.1.7
+      </div>
       <hr />
       <div>TEAM 1 - {props.team1Points}</div>
       <div>TEAM 2 - {props.team2Points}</div>
