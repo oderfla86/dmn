@@ -21,24 +21,7 @@ let player3 = [];
 let player4 = [];
 let tilePool = [];
 let table = [];
-
-const reducer = (prev, curr) => prev + curr;
-
-export function createGame() {
-  console.log("Initialising game data");
-  player1 = [];
-  player2 = [];
-  player3 = [];
-  player4 = [];
-  tilePool = [];
-  table = [];
-
-  createTiles();
-  shuffleTiles(tilePool);
-  dealTilesToPlayers(tilePool);
-
-  return startGame();
-}
+let startingPlayer = 0;
 
 function startGame() {
   return {
@@ -71,10 +54,6 @@ function shuffleTiles(arr) {
 function dealTilesToPlayers(arr) {
   let index = 0;
   for (let i = 0; i < arr.length; i++) {
-    index += 1;
-    if (index > 3) {
-      index = index - 4;
-    }
     switch (index) {
       case 0:
         player1.push(arr[i]);
@@ -91,56 +70,111 @@ function dealTilesToPlayers(arr) {
       default:
         console.log("Error!");
     }
+    index += 1;
+    if (index > 3) {
+      index = 0;
+    }
   }
+}
+
+function removePlaceholderTilesFromBoard(table) {
+  if (table[0].leftValue < 0) {
+    table.splice(0, 1);
+  }
+
+  if (table[table.length - 1].leftValue < 0) {
+    table.splice(table.length - 1, 1);
+  }
+
+  return table;
+}
+
+function getHandTotalPoints(hand) {
+  return hand.reduce((accumulator, tile) => {
+    return accumulator + tile.total;
+  }, 0);
+}
+
+export function createGame() {
+  console.log("Initialising game data");
+  player1 = [];
+  player2 = [];
+  player3 = [];
+  player4 = [];
+  tilePool = [];
+  table = [];
+
+  createTiles();
+  shuffleTiles(tilePool);
+  dealTilesToPlayers(tilePool);
+
+  return startGame();
 }
 
 export function searchTileForSimulation(
   playerHand,
   leftLeaf,
   rightLeaf,
-  table
+  table,
+  totalRounds
 ) {
   let newTile = null;
   let blocked = true;
-
-  for (let i = 0; i < playerHand.length; i++) {
-    let handTile = playerHand[i];
-
-    if (handTile.rightValue === leftLeaf || handTile.leftValue === leftLeaf) {
-      newTile = handTile;
-      newTile.leftLeaf =
-        handTile.rightValue === leftLeaf
-          ? handTile.leftValue
-          : handTile.rightValue;
-      newTile.rightLeaf = null;
-      newTile.name =
-        handTile.rightValue === leftLeaf
-          ? handTile.leftValue + ":" + handTile.rightValue
-          : handTile.rightValue + ":" + handTile.leftValue;
-      playerHand.splice(i, 1);
-      table.unshift(newTile);
-      blocked = false;
-      break;
-    } else if (
-      handTile.rightValue === rightLeaf ||
-      handTile.leftValue === rightLeaf
-    ) {
-      newTile = handTile;
-      newTile.rightLeaf =
-        handTile.rightValue === rightLeaf
-          ? handTile.leftValue
-          : handTile.rightValue;
-      newTile.leftLeaf = null;
-      newTile.name =
-        handTile.rightValue === rightLeaf
-          ? handTile.rightValue + ":" + handTile.leftValue
-          : handTile.leftValue + ":" + handTile.rightValue;
-      playerHand.splice(i, 1);
+  if (totalRounds === 0 && table.length === 0) {
+    //we know is starting, so we can start with 6:6 or a different tile
+    newTile = playerHand.find((tile) => tile.id === "6:6");
+    if (newTile) {
+      newTile.leftLeaf = newTile.leftValue;
+      newTile.rightLeaf = newTile.rightValue;
+      newTile.isStartingTile = true;
+      playerHand = playerHand.filter((tile) => tile.id !== "6:6");
       table.push(newTile);
       blocked = false;
-      break;
+    } else {
+      //player doesn't have 6:6, we pick a random one
+      // newTile = playerHand.shift();
+    }
+  } else {
+    for (let i = 0; i < playerHand.length; i++) {
+      let handTile = playerHand[i];
+
+      if (handTile.rightValue === leftLeaf || handTile.leftValue === leftLeaf) {
+        newTile = handTile;
+        newTile.leftLeaf =
+          handTile.rightValue === leftLeaf
+            ? handTile.leftValue
+            : handTile.rightValue;
+        newTile.rightLeaf = null;
+        newTile.name =
+          handTile.rightValue === leftLeaf
+            ? handTile.leftValue + ":" + handTile.rightValue
+            : handTile.rightValue + ":" + handTile.leftValue;
+        playerHand.splice(i, 1);
+        table.unshift(newTile);
+        blocked = false;
+        break;
+      } else if (
+        handTile.rightValue === rightLeaf ||
+        handTile.leftValue === rightLeaf
+      ) {
+        newTile = handTile;
+        newTile.rightLeaf =
+          handTile.rightValue === rightLeaf
+            ? handTile.leftValue
+            : handTile.rightValue;
+        newTile.leftLeaf = null;
+        newTile.name =
+          handTile.rightValue === rightLeaf
+            ? handTile.rightValue + ":" + handTile.leftValue
+            : handTile.leftValue + ":" + handTile.rightValue;
+        playerHand.splice(i, 1);
+        table.push(newTile);
+        blocked = false;
+        break;
+      }
     }
   }
+
   return {
     tile: newTile,
     hand: playerHand,
@@ -178,7 +212,6 @@ export function tilesAvailableForPlayer(playerHand, leftLeaf, rightLeaf) {
       blocked = false;
     }
   }
-  console.log(playerHand);
   return {
     playerHand: playerHand,
     blocked: blocked,
@@ -270,54 +303,25 @@ export function createBoardPlaceholderTiles(table, tile) {
   return table;
 }
 
-function removePlaceholderTilesFromBoard(table) {
-  if (table[0].leftValue < 0) {
-    table.splice(0, 1);
-  }
-
-  if (table[table.length - 1].leftValue < 0) {
-    table.splice(table.length - 1, 1);
-  }
-
-  return table;
-}
-
 export function calculatePointsForWinners(hand_1, hand_2) {
-  debugger;
-  const sum_1 = hand_1.reduce((accumulator, tile) => {
-    return accumulator + tile.total;
-  }, 0);
-
-  const sum_2 = hand_2.reduce((accumulator, tile) => {
-    return accumulator + tile.total;
-  }, 0);
+  const sum_1 = getHandTotalPoints(hand_1);
+  const sum_2 = getHandTotalPoints(hand_2);
 
   return sum_1 + sum_2;
 }
 
 export function calculateBlockedGameWinner(hand_1, hand_2, hand_3, hand_4) {
-  const sum_1 = hand_1.reduce((accumulator, tile) => {
-    return accumulator + tile.total;
-  }, 0);
+  const sum_1 = getHandTotalPoints(hand_1);
+  const sum_2 = getHandTotalPoints(hand_2);
+  const sum_3 = getHandTotalPoints(hand_3);
+  const sum_4 = getHandTotalPoints(hand_4);
 
-  const sum_2 = hand_2.reduce((accumulator, tile) => {
-    return accumulator + tile.total;
-  }, 0);
-
-  const sum_3 = hand_3.reduce((accumulator, tile) => {
-    return accumulator + tile.total;
-  }, 0);
-
-  const sum_4 = hand_4.reduce((accumulator, tile) => {
-    return accumulator + tile.total;
-  }, 0);
-
-  if (sum_1 + sum_3 > sum_2 > sum_4) {
+  if (sum_1 + sum_3 > sum_2 + sum_4) {
     return {
       winner: 1,
       points: sum_1 + sum_3,
     };
-  } else if (sum_1 + sum_3 < sum_2 > sum_4) {
+  } else if (sum_1 + sum_3 < sum_2 + sum_4) {
     return {
       winner: 0,
       points: sum_2 + sum_4,
@@ -327,5 +331,20 @@ export function calculateBlockedGameWinner(hand_1, hand_2, hand_3, hand_4) {
       winner: -1,
       points: 0,
     };
+  }
+}
+
+export function getStsartingPlayer(hand_1, hand_2, hand_3, hand_4) {
+  if (hand_1.find((tile) => tile.id === "6:6")) {
+    return 0;
+  }
+  if (hand_2.find((tile) => tile.id === "6:6")) {
+    return 1;
+  }
+  if (hand_3.find((tile) => tile.id === "6:6")) {
+    return 2;
+  }
+  if (hand_4.find((tile) => tile.id === "6:6")) {
+    return 3;
   }
 }

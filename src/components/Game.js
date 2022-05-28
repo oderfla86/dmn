@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useReducer } from "react";
 import Board from "./Board";
 import Player from "./Player";
 import Score from "./Score";
@@ -11,6 +11,7 @@ import {
   createBoardPlaceholderTiles,
   calculatePointsForWinners,
   calculateBlockedGameWinner,
+  getStsartingPlayer,
 } from "../Util";
 
 function Game(props) {
@@ -61,6 +62,8 @@ function Game(props) {
   let gameBlocked = useRef(0);
   let gameOver = useRef(false);
   let selectedTile = useRef(null);
+  let totalRounds = useRef(0);
+  let startingPlayer = useRef(0);
 
   const [table, setTable] = useState([]);
   const [player1, setPlayer1] = useState(props.data.player1);
@@ -75,6 +78,19 @@ function Game(props) {
   const [team1Points, setTeam1Points] = useState(0);
   const [team2Points, setTeam2Points] = useState(0);
 
+  useEffect(() => {
+    console.log("Getting starting player");
+    startingPlayer.current = getStsartingPlayer(
+      player1,
+      player2,
+      player3,
+      player4
+    );
+    if (startingPlayer.current !== 0) {
+      console.log("Player starting:", startingPlayer.current);
+      simulateOtherPlayersTurn(startingPlayer.current);
+    }
+  }, []);
   function timeout() {
     return new Promise((res) => setTimeout(res, DELAY));
   }
@@ -115,7 +131,7 @@ function Game(props) {
       console.log("GAME IS OVER");
       setTeam1Points(calculatePointsForWinners(player2, player4));
     } else {
-      simulateOtherPlayersTurn();
+      simulateOtherPlayersTurn(1);
     }
   }
 
@@ -131,7 +147,7 @@ function Game(props) {
       table.push(tile);
       setTable([...table]);
       setPlayer1([...player1]);
-      simulateOtherPlayersTurn();
+      simulateOtherPlayersTurn(1);
     } else {
       setPlayer1([...updatePlayerSelectedTile(tile, player1)]);
       selectedTile.current = tile;
@@ -159,15 +175,15 @@ function Game(props) {
     }
   }
 
-  async function simulateOtherPlayersTurn() {
-    let turn = 1;
+  async function simulateOtherPlayersTurn(turn) {
     while (turn < 4) {
       await timeout();
       let simulationTurn = searchTileForSimulation(
         getPlayerHand(turn),
         leftLeaf.current,
         rightLeaf.current,
-        table
+        table,
+        totalRounds.current
       );
       if (!simulationTurn.blocked) {
         //player is not blocked, they play a tile
@@ -195,7 +211,6 @@ function Game(props) {
         }
         turn += 1;
       } else {
-        debugger;
         console.log(`Player ${turn} passes the turn`);
         switch (turn) {
           case 1:
@@ -248,7 +263,7 @@ function Game(props) {
         await timeout();
         setPlayer1Blocked(false);
         gameBlocked.current += 1;
-        simulateOtherPlayersTurn();
+        simulateOtherPlayersTurn(1);
       }
     } else {
       setIsGameOver(gameOver.current);
