@@ -21,7 +21,6 @@ let player3 = [];
 let player4 = [];
 let tilePool = [];
 let table = [];
-let startingPlayer = 0;
 
 function startGame() {
   return {
@@ -120,6 +119,7 @@ export function searchTileForSimulation(
 ) {
   let newTile = null;
   let blocked = true;
+  //we need to add an extra check in here
   if (totalRounds === 0 && table.length === 0) {
     //we know is starting, so we can start with 6:6 or a different tile
     newTile = playerHand.find((tile) => tile.id === "6:6");
@@ -131,8 +131,31 @@ export function searchTileForSimulation(
       table.push(newTile);
       blocked = false;
     } else {
-      //player doesn't have 6:6, we pick a random one
-      // newTile = playerHand.shift();
+      //player doesn't have 6:6, we pick first one
+      newTile = playerHand.shift();
+      newTile.leftLeaf = newTile.leftValue;
+      newTile.rightLeaf = newTile.rightValue;
+      newTile.isStartingTile = true;
+      table.push(newTile);
+      blocked = false;
+    }
+  } else if (totalRounds > 0 && table.length === 0) {
+    //we try to find a double, if not, we play the first one
+    newTile = playerHand.find((tile) => tile.leftValue === tile.rightValue);
+    if (newTile) {
+      newTile.leftLeaf = newTile.leftValue;
+      newTile.rightLeaf = newTile.rightValue;
+      newTile.isStartingTile = true;
+      playerHand = playerHand.filter((tile) => tile.id !== newTile.id);
+      table.push(newTile);
+      blocked = false;
+    } else {
+      newTile = playerHand.shift();
+      newTile.leftLeaf = newTile.leftValue;
+      newTile.rightLeaf = newTile.rightValue;
+      newTile.isStartingTile = true;
+      table.push(newTile);
+      blocked = false;
     }
   } else {
     for (let i = 0; i < playerHand.length; i++) {
