@@ -206,33 +206,45 @@ export function searchTileForSimulation(
   };
 }
 
-export function tilesAvailableForPlayer(playerHand, leftLeaf, rightLeaf) {
+export function tilesAvailableForPlayer(
+  playerHand,
+  leftLeaf,
+  rightLeaf,
+  currentTurn
+) {
   let blocked = true;
   for (let i = 0; i < playerHand.length; i++) {
     playerHand[i].canPlayLeft = false;
     playerHand[i].canPlayRight = false;
-    if (
-      playerHand[i].rightValue !== leftLeaf &&
-      playerHand[i].leftValue !== leftLeaf &&
-      playerHand[i].rightValue !== rightLeaf &&
-      playerHand[i].leftValue !== rightLeaf
-    ) {
-      playerHand[i].enabled = false;
+    if (currentTurn != undefined && currentTurn == 0) {
+      if (playerHand[i].id !== "6:6") {
+        playerHand[i].enabled = false;
+        blocked = false;
+      }
     } else {
-      playerHand[i].enabled = true;
       if (
-        playerHand[i].rightValue === leftLeaf ||
-        playerHand[i].leftValue === leftLeaf
+        playerHand[i].rightValue !== leftLeaf &&
+        playerHand[i].leftValue !== leftLeaf &&
+        playerHand[i].rightValue !== rightLeaf &&
+        playerHand[i].leftValue !== rightLeaf
       ) {
-        playerHand[i].canPlayLeft = true;
+        playerHand[i].enabled = false;
+      } else {
+        playerHand[i].enabled = true;
+        if (
+          playerHand[i].rightValue === leftLeaf ||
+          playerHand[i].leftValue === leftLeaf
+        ) {
+          playerHand[i].canPlayLeft = true;
+        }
+        if (
+          playerHand[i].rightValue === rightLeaf ||
+          playerHand[i].leftValue === rightLeaf
+        ) {
+          playerHand[i].canPlayRight = true;
+        }
+        blocked = false;
       }
-      if (
-        playerHand[i].rightValue === rightLeaf ||
-        playerHand[i].leftValue === rightLeaf
-      ) {
-        playerHand[i].canPlayRight = true;
-      }
-      blocked = false;
     }
   }
   return {

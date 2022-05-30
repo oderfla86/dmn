@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Game from "./components/Game";
+import Game from "./components/Game/Game";
 import { createGame } from "./Util";
 
 function App() {
@@ -7,6 +7,7 @@ function App() {
   const [initialSate, setInitialSate] = useState(null);
 
   useEffect(() => {
+    //initial values of the game (round, points, points, startingPlayer)
     createNewHands(-1, 0, 0, -2);
   }, []);
 

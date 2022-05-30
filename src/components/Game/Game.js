@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from "react";
-import Board from "./Board";
-import Player from "./Player";
-import Score from "./Score";
+import Board from "../Board/Board";
+import Player from "../Player/Player";
+import Score from "../Score/Score";
+import "../Player/Player.css";
 import {
   searchTileForSimulation,
   placePlayerTile,
@@ -12,50 +13,9 @@ import {
   calculatePointsForWinners,
   calculateBlockedGameWinner,
   getStsartingPlayer,
-} from "../Util";
+} from "../../Util";
 
 function Game(props) {
-  const p1_styles = {
-    backgroundColor: "transparent",
-    width: "320px",
-    height: "60px",
-    position: "absolute",
-    left: "50%",
-    top: "93%",
-    transform: "translate(-50%, -50%)",
-  };
-
-  const p2_styles = {
-    backgroundColor: "transparent",
-    width: "250px",
-    height: "50px",
-    position: "absolute",
-    left: "97%",
-    top: "50%",
-    transform: "translate(-50%, -50%) rotate(90deg)",
-  };
-
-  const p3_styles = {
-    backgroundColor: "transparent",
-    width: "250px",
-    height: "50px",
-    position: "absolute",
-    left: "50%",
-    top: "5%",
-    transform: "translate(-50%, -50%)",
-  };
-
-  const p4_styles = {
-    backgroundColor: "transparent",
-    width: "300px",
-    height: "50px",
-    textAlign: "center",
-    position: "absolute",
-    left: "3%",
-    top: "50%",
-    transform: "translate(-50%, -50%) rotate(90deg)",
-  };
-
   const DELAY = 1000;
   const ROUND_DELAY = 5000;
   let leftLeaf = useRef(-1);
@@ -81,6 +41,7 @@ function Game(props) {
   const [isGameOver, setIsGameOver] = useState(false);
   const [team1Points, setTeam1Points] = useState(team1.current);
   const [team2Points, setTeam2Points] = useState(team2.current);
+  const [isHand, setIsHand] = useState(null);
 
   useEffect(() => {
     console.log("Getting starting player:", startingPlayer.current);
@@ -91,13 +52,32 @@ function Game(props) {
         player3,
         player4
       );
+      setIsHand(startingPlayer.current);
       if (startingPlayer.current !== 0) {
         console.log("Player starting:", startingPlayer.current);
         simulateOtherPlayersTurn(startingPlayer.current);
+      } else {
+        let playerTurnCheck = tilesAvailableForPlayer(
+          player1,
+          leftLeaf.current,
+          rightLeaf.current,
+          totalRounds.current
+        );
+        setPlayer1([...playerTurnCheck.playerHand]);
       }
     } else {
+      setIsHand(startingPlayer.current);
       if (startingPlayer.current !== 0) {
         simulateOtherPlayersTurn(startingPlayer.current);
+      } else {
+        let playerTurnCheck = tilesAvailableForPlayer(
+          player1,
+          leftLeaf.current,
+          rightLeaf.current,
+          totalRounds.current
+        );
+        setPlayer1([...playerTurnCheck.playerHand]);
+        setIsHand(startingPlayer.current);
       }
     }
   }, []);
@@ -354,80 +334,62 @@ function Game(props) {
       />
       <Score team1Points={team1Points} team2Points={team2Points} />
       <Player
-        style={p1_styles}
         isPlayer={true}
         hand={player1}
         playerPlaysTile={playerPlaysTile}
         isGameOver={isGameOver}
         isPlayerBlocked={isPlayer1Blocked}
+        isHand={isHand}
       />
       <Player
-        style={p2_styles}
+        style={"player2"}
         isPlayer={false}
         hand={player2}
         isGameOver={isGameOver}
         isPlayerBlocked={isPlayer2Blocked}
-        tileStyle={{ width: "30px", height: "50px", marginRight: "5px" }}
+        tileStyle={"player_tile"}
+        blockedClass={"player2_blocked"}
         blockedStyle={{
-          backgroundColor: "#36454F",
-          textAlign: "center",
-          borderRadius: "5px",
-          color: "white",
-          width: "70px",
-          height: "30px",
-          position: "absolute",
-          left: "97%",
-          top: "25%",
-          transform: "translate(-50%, -50%)",
           opacity: isPlayer2Blocked ? "1" : "0",
-          transition: "all 1s",
           visibility: isPlayer2Blocked ? "visible" : "hidden",
+        }}
+        handClass={"player2_isHand"}
+        isHandStyle={{
+          visibility: isHand === 1 ? "visible" : "hidden",
         }}
       />
       <Player
-        style={p3_styles}
+        style={"player3"}
         isPlayer={false}
         hand={player3}
         isGameOver={isGameOver}
         isPlayerBlocked={isPlayer3Blocked}
-        tileStyle={{ width: "30px", height: "50px", marginRight: "5px" }}
+        tileStyle={"player_tile"}
+        blockedClass={"player3_blocked"}
         blockedStyle={{
-          backgroundColor: "#36454F",
-          textAlign: "center",
-          borderRadius: "5px",
-          color: "white",
-          width: "70px",
-          height: "30px",
-          position: "absolute",
-          left: "65%",
-          top: "5%",
-          transform: "translate(-50%, -50%)",
           opacity: isPlayer3Blocked ? "1" : "0",
-          transition: "all 1s",
           visibility: isPlayer3Blocked ? "visible" : "hidden",
+        }}
+        handClass={"player3_isHand"}
+        isHandStyle={{
+          visibility: isHand === 2 ? "visible" : "hidden",
         }}
       />
       <Player
-        style={p4_styles}
+        style={"player4"}
         isPlayer={false}
         hand={player4}
         isGameOver={isGameOver}
         isPlayerBlocked={isPlayer4Blocked}
-        tileStyle={{ width: "30px", height: "50px", marginRight: "5px" }}
+        tileStyle={"player_tile"}
+        blockedClass={"player4_blocked"}
         blockedStyle={{
-          backgroundColor: "#36454F",
-          textAlign: "center",
-          borderRadius: "5px",
-          color: "white",
-          width: "70px",
-          height: "30px",
-          position: "absolute",
-          left: "3%",
-          top: "25%",
-          transform: "translate(-50%, -50%)",
           opacity: isPlayer4Blocked ? "1" : "0",
-          transition: "all 1s",
           visibility: isPlayer4Blocked ? "visible" : "hidden",
+        }}
+        handClass={"player4_isHand"}
+        isHandStyle={{
+          visibility: isHand === 3 ? "visible" : "hidden",
         }}
       />
       <Board table={table} boardTilePressed={boardTilePressed} />
