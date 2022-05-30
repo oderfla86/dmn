@@ -9,7 +9,6 @@ function Score(props) {
         color: "white",
         width: "152px",
         height: "80px",
-        position: "absolute",
         left: "87%",
         top: "6%",
         transform: "translate(-50%, -50%)",
@@ -24,7 +23,7 @@ function Score(props) {
           position: "absolute",
         }}
       >
-        v0.2.0
+        v0.2.1
       </div>
       <hr />
       <div>TEAM 1 - {props.team1Points}</div>
