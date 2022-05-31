@@ -349,6 +349,7 @@ function Game(props) {
         isHand={isHand}
       />
       <Player
+        container={"player2_container"}
         style={"player2"}
         isPlayer={false}
         hand={player2}
@@ -366,6 +367,7 @@ function Game(props) {
         }}
       />
       <Player
+        container={"player3_container"}
         style={"player3"}
         isPlayer={false}
         hand={player3}
@@ -383,6 +385,7 @@ function Game(props) {
         }}
       />
       <Player
+        container={"player4_container"}
         style={"player4"}
         isPlayer={false}
         hand={player4}
