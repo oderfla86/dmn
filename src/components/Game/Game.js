@@ -44,6 +44,11 @@ function Game(props) {
   const [isHand, setIsHand] = useState(null);
 
   useEffect(() => {
+    console.log("STARTING NEW ROUND");
+    console.info("hand 1:", props.data.player1);
+    console.info("hand 2:", props.data.player2);
+    console.info("hand 3:", props.data.player3);
+    console.info("hand 4:", props.data.player4);
     console.log("Getting starting player:", startingPlayer.current);
     if (startingPlayer.current < 0) {
       startingPlayer.current = getStsartingPlayer(
@@ -119,6 +124,7 @@ function Game(props) {
     //leftValue -1 left side clicked
     //leftValue -2 right side clicked
     gameBlocked.current = 0;
+    console.log("Player 0 played:", selectedTile.current.id);
     let updatedPlayStatus = placePlayerTile(
       selectedTile.current,
       leftLeaf.current,
@@ -151,8 +157,6 @@ function Game(props) {
   }
 
   function playerPlaysTile(tile) {
-    console.log("Player plays tile:", tile);
-
     let tileIndex = getTileHandIndex(tile);
     if (table.length === 0) {
       player1.splice(tileIndex, 1);
@@ -161,7 +165,7 @@ function Game(props) {
       rightLeaf.current = tile.rightValue;
       table.push(tile);
       setTable([...table]);
-      setPlayer1([...player1]);
+      setPlayer1([...disablePlayerHand(player1)]);
       simulateOtherPlayersTurn(1);
     } else {
       setPlayer1([...updatePlayerSelectedTile(tile, player1)]);
@@ -191,6 +195,7 @@ function Game(props) {
   }
 
   async function simulateOtherPlayersTurn(turn) {
+    setPlayer1([...disablePlayerHand(player1)]);
     while (turn < 4) {
       await timeout(DELAY);
       let simulationTurn = searchTileForSimulation(
@@ -202,6 +207,7 @@ function Game(props) {
       );
       if (!simulationTurn.blocked) {
         //player is not blocked, they play a tile
+        console.info("Player " + turn + " played: " + simulationTurn.tile.id);
         gameBlocked.current = 0;
         leftLeaf.current =
           simulationTurn.tile.leftLeaf !== null
@@ -291,6 +297,7 @@ function Game(props) {
         await timeout(DELAY);
         setPlayer1Blocked(false);
         gameBlocked.current += 1;
+        console.log(`Player 0 passes the turn`);
         if (gameBlocked.current >= 4) {
           gameOver.current = true;
           console.error("Game is blocked. No more available moves");
