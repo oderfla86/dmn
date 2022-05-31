@@ -3,7 +3,7 @@ import "./Player.css";
 function Player(props) {
   if (props.isPlayer) {
     return (
-      <div>
+      <div className="player1_container">
         <div className="player1">
           {props.hand.map(function (player_tile) {
             return (
@@ -40,7 +40,7 @@ function Player(props) {
     );
   } else {
     return (
-      <div>
+      <div className={`${props.container}`}>
         <div className={`${props.style}`}>
           {props.hand.map(function (player_tile) {
             return (

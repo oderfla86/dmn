@@ -17,13 +17,13 @@ function Score(props) {
       <div>Scoreboard</div>
       <div
         style={{
-          fontSize: "5px",
+          fontSize: "7px",
           right: "5%",
           top: "10%",
           position: "absolute",
         }}
       >
-        v0.2.2
+        v0.2.3
       </div>
       <hr />
       <div>TEAM 1 - {props.team1Points}</div>
