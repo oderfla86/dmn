@@ -371,17 +371,94 @@ export function calculateBlockedGameWinner(hand_1, hand_2, hand_3, hand_4) {
   }
 }
 
-export function getStsartingPlayer(hand_1, hand_2, hand_3, hand_4) {
-  if (hand_1.find((tile) => tile.id === "6:6")) {
-    return 0;
+export function getStsartingPlayer(listOfPlayers) {
+  for (let i = 0; i < listOfPlayers.length; i++) {
+    let hand = JSON.parse(listOfPlayers[i].hand);
+    if (hand.find((tile) => tile.id === "6:6")) {
+      return listOfPlayers[i].id;
+    }
   }
-  if (hand_2.find((tile) => tile.id === "6:6")) {
-    return 1;
+  // if (hand_1.find((tile) => tile.id === "6:6")) {
+  //   return 0;
+  // }
+  // if (hand_2.find((tile) => tile.id === "6:6")) {
+  //   return 1;
+  // }
+  // if (hand_3.find((tile) => tile.id === "6:6")) {
+  //   return 2;
+  // }
+  // if (hand_4.find((tile) => tile.id === "6:6")) {
+  //   return 3;
+  // }
+}
+
+export function getTotalOfValidPlayers(listOfPlayers) {
+  let users = [];
+  Object.values(listOfPlayers).forEach((val) => {
+    if (val.name !== "dummy") {
+      users.push(val);
+    }
+  });
+
+  return users;
+}
+
+export function randomisePlayersTurnOrder(listOfPlayers, gameState) {
+  let currentIndex = listOfPlayers.length,
+    randomIndex;
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [listOfPlayers[currentIndex], listOfPlayers[randomIndex]] = [
+      listOfPlayers[randomIndex],
+      listOfPlayers[currentIndex],
+    ];
   }
-  if (hand_3.find((tile) => tile.id === "6:6")) {
-    return 2;
+
+  for (let i = 0; i < listOfPlayers.length; i++) {
+    switch (i) {
+      case 0:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player1);
+        break;
+      case 1:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player2);
+        break;
+      case 2:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player3);
+        break;
+      case 3:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player4);
+        break;
+      default:
+        console.log("Error!");
+    }
   }
-  if (hand_4.find((tile) => tile.id === "6:6")) {
-    return 3;
+
+  return listOfPlayers;
+}
+
+export function getLocalOrderOfPlayers(listOfPlayers, playerId) {
+  let newOrder = [];
+  const index = listOfPlayers.findIndex((player) => {
+    return player.id === playerId;
+  });
+
+  if (index !== 0) {
+    newOrder.push(listOfPlayers[index]);
+
+    for (let i = index + 1; i < listOfPlayers.length; i++) {
+      newOrder.push(listOfPlayers[i]);
+    }
+    for (let i = 0; i < index; i++) {
+      newOrder.push(listOfPlayers[i]);
+    }
+
+    return newOrder;
   }
+
+  return listOfPlayers;
 }

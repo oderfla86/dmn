@@ -1,35 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Game from "./components/Game/Game";
-import { createGame } from "./Util";
+import GameBoard from "./components/Game/GameBoard";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [initialSate, setInitialSate] = useState(null);
+  const [playerId, setplayerId] = useState(null);
 
-  useEffect(() => {
-    //initial values of the game (round, points, points, startingPlayer)
-    createNewHands(-1, 0, 0, -2);
-  }, []);
-
-  function createNewHands(round, team1Points, team2Points, currentPlayer) {
-    let newState = createGame();
-    newState.rounds = round + 1;
-    newState.team1Points = team1Points;
-    newState.team2Points = team2Points;
-    newState.startingPlayer = currentPlayer + 1 < 4 ? currentPlayer + 1 : 0;
-    setInitialSate(newState);
+  function gameReadyToStart(playerId) {
+    setplayerId(playerId);
     setIsLoading(false);
+  }
+  function createNewHands(round, team1Points, team2Points, currentPlayer) {
+    // let newState = createGame();
+    // newState.rounds = round + 1;
+    // newState.team1Points = team1Points;
+    // newState.team2Points = team2Points;
+    // newState.startingPlayer = currentPlayer + 1 < 4 ? currentPlayer + 1 : 0;
+    // setInitialSate(newState);
+    // setIsLoading(true);
   }
 
   return (
     <div>
       {!isLoading ? (
-        <Game
+        <GameBoard
           key={new Date().getTime()}
-          data={initialSate}
+          playerId={playerId}
           createNewHands={createNewHands}
         />
-      ) : null}
+      ) : (
+        <Dashboard gameReady={gameReadyToStart} />
+      )}
     </div>
   );
 }

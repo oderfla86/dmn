@@ -334,9 +334,6 @@ function Game(props) {
           width: "100%",
           height: "100%",
           position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
         }}
       />
       <Score team1Points={team1Points} team2Points={team2Points} />

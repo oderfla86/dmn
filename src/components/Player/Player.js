@@ -9,11 +9,7 @@ function Player(props) {
             return (
               <button
                 className="player1_tile"
-                onClick={() => props.playerPlaysTile(player_tile)}
                 disabled={!player_tile.enabled}
-                style={{
-                  background: player_tile.isSelected ? "#90ee90" : null,
-                }}
                 key={player_tile.name}
               >
                 {player_tile.name}
@@ -33,7 +29,7 @@ function Player(props) {
         <span
           className="player1_isHand"
           style={{
-            visibility: props.isHand === 0 ? "visible" : "hidden",
+            visibility: props.isHand ? "visible" : "hidden",
           }}
         ></span>
       </div>
@@ -53,9 +49,6 @@ function Player(props) {
               </button>
             );
           })}
-        </div>
-        <div className={`${props.blockedClass}`} style={props.blockedStyle}>
-          Blocked
         </div>
         <span className={`${props.handClass}`} style={props.isHandStyle}></span>
       </div>
