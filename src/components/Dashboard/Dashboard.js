@@ -61,6 +61,20 @@ function Dashboard(props) {
         id: playerId.current,
       });
 
+      let blockedRef = ref(db.current, `blocked`);
+      set(blockedRef, {
+        isGameRunning: false,
+        isPlayerBlocked: false,
+        isGameBlocked: 0,
+      });
+
+      let pointsRef = ref(db.current, `points`);
+      set(pointsRef, {
+        isGameRunning: false,
+        team1Points: 0,
+        team2Points: 0,
+      });
+
       onDisconnect(playerRef.current).remove();
 
       onValue(allPlayersRef, (snapshot) => {
@@ -74,7 +88,7 @@ function Dashboard(props) {
             admin: playerId.current,
           });
         }
-        if (arrayOfPlayers.length < 2) {
+        if (arrayOfPlayers.length < 4) {
           setArePlayersReady(false);
           console.log(
             "Waiting for more player to join " + arrayOfPlayers.length + "/4"
@@ -108,17 +122,19 @@ function Dashboard(props) {
     //get random order of players
     let newState = createGame(); // contains hands and table values. We need to assign them to each player now, randomly.
     let orderOfPlayers = randomisePlayersTurnOrder(listOfPlayers, newState); //returns a list of objects with username and firebase id + hand
-    let startingPlayer = playerId.current;
-    // let startingPlayer = getStsartingPlayer(orderOfPlayers); //returns the id of the user who has 6:6 in their hand
+    let startingPlayer = getStsartingPlayer(orderOfPlayers); //returns the id of the user who has 6:6 in their hand
 
     update(gameRef.current, {
-      team1Points: 0,
-      team2Points: 0,
-      rounds: 0,
       shouldStartGame: true,
       isGameRunning: false,
+      leftLeaf: -1,
+      rightLeaf: -1,
+      isRoundOver: false,
+      isGameOver: false,
       startingPlayer: startingPlayer,
+      currentTurn: startingPlayer,
       order: JSON.stringify(orderOfPlayers),
+      round: 0,
     });
   }
 

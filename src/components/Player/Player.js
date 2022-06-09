@@ -9,6 +9,10 @@ function Player(props) {
             return (
               <button
                 className="player1_tile"
+                onClick={() => props.playerPlaysTile(player_tile)}
+                style={{
+                  background: player_tile.isSelected ? "#90ee90" : null,
+                }}
                 disabled={!player_tile.enabled}
                 key={player_tile.name}
               >
@@ -45,10 +49,13 @@ function Player(props) {
                 disabled={!player_tile.enabled}
                 key={player_tile.name}
               >
-                {props.isGameOver ? player_tile.name : ""}
+                {props.isRoundOver ? player_tile.name : ""}
               </button>
             );
           })}
+        </div>
+        <div className={`${props.blockedClass}`} style={props.blockedStyle}>
+          Blocked
         </div>
         <span className={`${props.handClass}`} style={props.isHandStyle}></span>
       </div>
