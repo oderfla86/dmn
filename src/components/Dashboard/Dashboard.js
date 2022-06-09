@@ -73,6 +73,8 @@ function Dashboard(props) {
         isGameRunning: false,
         team1Points: 0,
         team2Points: 0,
+        team1Name: "TEAM 1",
+        team2Name: "TEAM 2",
       });
 
       onDisconnect(playerRef.current).remove();
@@ -124,6 +126,11 @@ function Dashboard(props) {
     let orderOfPlayers = randomisePlayersTurnOrder(listOfPlayers, newState); //returns a list of objects with username and firebase id + hand
     let startingPlayer = getStsartingPlayer(orderOfPlayers); //returns the id of the user who has 6:6 in their hand
 
+    let pointsRef = ref(db.current, `points`);
+    update(pointsRef, {
+      team1Name: orderOfPlayers[0].name + "-" + orderOfPlayers[2].name,
+      team2Name: orderOfPlayers[1].name + "-" + orderOfPlayers[3].name,
+    });
     update(gameRef.current, {
       shouldStartGame: true,
       isGameRunning: false,

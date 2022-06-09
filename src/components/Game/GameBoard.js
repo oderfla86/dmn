@@ -61,6 +61,8 @@ function Game(props) {
   const [isPlayer4Blocked, setPlayer4Blocked] = useState(false);
   const [team1Points, setTeam1Points] = useState(0);
   const [team2Points, setTeam2Points] = useState(0);
+  const [team1Name, setTeam1Name] = useState("");
+  const [team2Name, setTeam2Name] = useState("");
   const [isRoundOver, setIsRoundOver] = useState(false);
 
   useEffect(() => {
@@ -94,29 +96,36 @@ function Game(props) {
 
         if (boardState.isRoundOver) {
           setIsRoundOver(true);
-          console.log("Calculating blocked game winner");
-          let result = calculateBlockedGameWinner(
-            player1,
-            player2,
-            player3,
-            player4
-          );
           if (
-            props.playerId === originalOrder.current[0].id ||
-            props.playerId === originalOrder.current[2].id
+            JSON.parse(playersOrderLocal.current[0].hand).length > 0 &&
+            JSON.parse(playersOrderLocal.current[1].hand).length > 0 &&
+            JSON.parse(playersOrderLocal.current[2].hand).length > 0 &&
+            JSON.parse(playersOrderLocal.current[3].hand).length > 0
           ) {
-            //I know I'm a team 1 player
-            if (result.winner === 0) {
-              update(pointsRef.current, {
-                team1Points: team1Points + result.points,
-              });
-            }
-          } else {
-            //I know I'm a team 2 player
-            if (result.winner === 1) {
-              update(pointsRef.current, {
-                team2Points: team2Points + result.points,
-              });
+            console.log("Calculating blocked game winner");
+            let result = calculateBlockedGameWinner(
+              JSON.parse(playersOrderLocal.current[1].hand).length,
+              JSON.parse(playersOrderLocal.current[2].hand).length,
+              JSON.parse(playersOrderLocal.current[3].hand).length,
+              JSON.parse(playersOrderLocal.current[4].hand).length
+            );
+            if (
+              props.playerId === originalOrder.current[0].id ||
+              props.playerId === originalOrder.current[2].id
+            ) {
+              //I know I'm a team 1 player
+              if (result.winner === 0) {
+                update(pointsRef.current, {
+                  team1Points: team1Points + result.points,
+                });
+              }
+            } else {
+              //I know I'm a team 2 player
+              if (result.winner === 1) {
+                update(pointsRef.current, {
+                  team2Points: team2Points + result.points,
+                });
+              }
             }
           }
         } else {
@@ -129,7 +138,8 @@ function Game(props) {
       let pointsState = snapshot.val();
 
       if (pointsState) {
-        debugger;
+        setTeam1Name(pointsState.team1Name);
+        setTeam2Name(pointsState.team2Name);
         setTeam1Points(pointsState.team1Points);
         setTeam2Points(pointsState.team2Points);
       }
@@ -311,6 +321,13 @@ function Game(props) {
     setP1([...disablePlayerHand(player1)]);
     if (player1.length === 0) {
       console.log("Round is over");
+      //we update the UI for all users
+      let updatedOrder = updateOriginalOrderArray(
+        originalOrder.current,
+        player1,
+        props.playerId
+      );
+
       if (
         props.playerId === originalOrder.current[0].id ||
         props.playerId === originalOrder.current[2].id
@@ -328,7 +345,11 @@ function Game(props) {
           team2Points: team2Points + points,
         });
       }
-      setIsRoundOver(true);
+      update(gameRef.current, {
+        table: JSON.stringify(table),
+        order: JSON.stringify(updatedOrder),
+        isRoundOver: true,
+      });
     } else {
       // pass the turn for the next user
       let updatedOrder = updateOriginalOrderArray(
@@ -337,7 +358,6 @@ function Game(props) {
         props.playerId
       );
 
-      gameRef.current = ref(db.current, `game`);
       update(gameRef.current, {
         leftLeaf: leftLeaf.current,
         rightLeaf: rightLeaf.current,
@@ -388,7 +408,12 @@ function Game(props) {
           transform: "translate(-50%, -50%)",
         }}
       />
-      <Score team1Points={team1Points} team2Points={team2Points} />
+      <Score
+        team1Points={team1Points}
+        team2Points={team2Points}
+        team1Name={team1Name}
+        team2Name={team2Name}
+      />
       <Player
         isPlayer={true}
         hand={player1}

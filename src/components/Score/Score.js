@@ -26,8 +26,12 @@ function Score(props) {
         v0.2.3
       </div>
       <hr />
-      <div>TEAM 1 - {props.team1Points}</div>
-      <div>TEAM 2 - {props.team2Points}</div>
+      <div>
+        {props.team1Name} - {props.team1Points}
+      </div>
+      <div>
+        {props.team2Name} - {props.team2Points}
+      </div>
     </div>
   );
 }
