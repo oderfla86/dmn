@@ -36,6 +36,15 @@ function Player(props) {
             visibility: props.isHand ? "visible" : "hidden",
           }}
         ></span>
+        <div
+          className="player1_name"
+          style={{
+            opacity: "1",
+            visibility: "visible",
+          }}
+        >
+          {props.name}
+        </div>
       </div>
     );
   } else {
@@ -58,6 +67,15 @@ function Player(props) {
           Blocked
         </div>
         <span className={`${props.handClass}`} style={props.isHandStyle}></span>
+        <div
+          className={props.nameClass}
+          style={{
+            opacity: "1",
+            visibility: "visible",
+          }}
+        >
+          {props.name}
+        </div>
       </div>
     );
   }

@@ -63,6 +63,10 @@ function Game(props) {
   const [team2Points, setTeam2Points] = useState(0);
   const [team1Name, setTeam1Name] = useState("");
   const [team2Name, setTeam2Name] = useState("");
+  const [player1Name, setP1Name] = useState(null);
+  const [player2Name, setP2Name] = useState(null);
+  const [player3Name, setP3Name] = useState(null);
+  const [player4Name, setP4Name] = useState(null);
   const [isRoundOver, setIsRoundOver] = useState(false);
 
   useEffect(() => {
@@ -93,6 +97,10 @@ function Game(props) {
           JSON.parse(boardState.order),
           props.playerId
         );
+        setP1Name(playersOrderLocal.current[0].name);
+        setP2Name(playersOrderLocal.current[1].name);
+        setP3Name(playersOrderLocal.current[2].name);
+        setP4Name(playersOrderLocal.current[3].name);
 
         if (boardState.isRoundOver) {
           setIsRoundOver(true);
@@ -417,6 +425,7 @@ function Game(props) {
       <Player
         isPlayer={true}
         hand={player1}
+        name={player1Name}
         playerPlaysTile={playerPlaysTile}
         isPlayerBlocked={isPlayer1Blocked}
         isHand={startingPlayer.current === props.playerId ? true : false}
@@ -426,6 +435,7 @@ function Game(props) {
         style={"player2"}
         isPlayer={false}
         hand={player2.hand ? JSON.parse(player2.hand) : player2}
+        name={player2Name}
         tileStyle={"player_tile"}
         isPlayerBlocked={isPlayer2Blocked}
         isRoundOver={isRoundOver}
@@ -439,12 +449,14 @@ function Game(props) {
           visibility:
             player2.id === startingPlayer.current ? "visible" : "hidden",
         }}
+        nameClass={"player2_name"}
       />
       <Player
         container={"player3_container"}
         style={"player3"}
         isPlayer={false}
         hand={player3.hand ? JSON.parse(player3.hand) : player3}
+        name={player3Name}
         tileStyle={"player_tile"}
         isPlayerBlocked={isPlayer3Blocked}
         isRoundOver={isRoundOver}
@@ -458,12 +470,14 @@ function Game(props) {
           visibility:
             player3.id === startingPlayer.current ? "visible" : "hidden",
         }}
+        nameClass={"player3_name"}
       />
       <Player
         container={"player4_container"}
         style={"player4"}
         isPlayer={false}
         hand={player4.hand ? JSON.parse(player4.hand) : player4}
+        name={player4Name}
         tileStyle={"player_tile"}
         isPlayerBlocked={isPlayer4Blocked}
         isRoundOver={isRoundOver}
@@ -477,6 +491,7 @@ function Game(props) {
           visibility:
             player4.id === startingPlayer.current ? "visible" : "hidden",
         }}
+        nameClass={"player2_name"}
       />
       <Board table={table} boardTilePressed={boardTilePressed} />
     </div>

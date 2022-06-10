@@ -362,6 +362,7 @@ function Game(props) {
         isHandStyle={{
           visibility: isHand === 1 ? "visible" : "hidden",
         }}
+        nameClass={"player2_name"}
       />
       <Player
         container={"player3_container"}
@@ -380,6 +381,7 @@ function Game(props) {
         isHandStyle={{
           visibility: isHand === 2 ? "visible" : "hidden",
         }}
+        nameClass={"player3_name"}
       />
       <Player
         container={"player4_container"}
@@ -398,6 +400,7 @@ function Game(props) {
         isHandStyle={{
           visibility: isHand === 3 ? "visible" : "hidden",
         }}
+        nameClass={"player2_name"}
       />
       <Board table={table} boardTilePressed={boardTilePressed} />
     </div>
