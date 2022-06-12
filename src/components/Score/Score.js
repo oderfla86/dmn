@@ -23,7 +23,7 @@ function Score(props) {
           position: "absolute",
         }}
       >
-        v1.0.0
+        v1.0.1
       </div>
       <hr />
       <div>

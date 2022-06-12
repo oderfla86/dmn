@@ -117,10 +117,10 @@ function Game(props) {
           ) {
             console.log("Calculating blocked game winner");
             let result = calculateBlockedGameWinner(
-              JSON.parse(playersOrderLocal.current[0].hand).length,
-              JSON.parse(playersOrderLocal.current[1].hand).length,
-              JSON.parse(playersOrderLocal.current[2].hand).length,
-              JSON.parse(playersOrderLocal.current[3].hand).length
+              JSON.parse(playersOrderLocal.current[0].hand),
+              JSON.parse(playersOrderLocal.current[1].hand),
+              JSON.parse(playersOrderLocal.current[2].hand),
+              JSON.parse(playersOrderLocal.current[3].hand)
             );
             if (
               props.playerId === originalOrder.current[0].id ||
