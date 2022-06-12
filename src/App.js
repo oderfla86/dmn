@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Game from "./components/Game/Game";
 import { createGame } from "./Util";
 import GameBoard from "./components/Game/GameBoard";
 import Dashboard from "./components/Dashboard/Dashboard";
