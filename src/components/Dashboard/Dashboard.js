@@ -177,42 +177,83 @@ function Dashboard(props) {
         height: "100%",
       }}
     >
-      <form style={{ margin: "auto" }}>
-        <label>
-          Username:
-          <input
+      <div
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
+        }}
+      >
+        <label>Welcome to DMN</label>
+      </div>
+      <div
+        style={{
+          margin: "0",
+          backgroundColor: "#7393B3",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "150px",
+          width: "300px",
+          padding: "0",
+        }}
+      >
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Players connected</th>
+            </tr>
+          </thead>
+          <tbody>
+            {listOfPlayers.map((d) => (
+              <tr>
+                <td>{d.name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div
+        style={{
+          margin: "0",
+          backgroundColor: "#7393B3",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "150px",
+          width: "400px",
+          padding: "0",
+        }}
+      >
+        <form style={{ margin: "auto" }}>
+          <label>
+            Username:
+            <input
+              disabled={disable}
+              type="text"
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            />
+          </label>
+          <button
             disabled={disable}
-            type="text"
-            onChange={(e) => {
-              setName(e.target.value);
+            onClick={(e) => {
+              submitUser(e);
             }}
-          />
-        </label>
-        <button
-          disabled={disable}
-          onClick={(e) => {
-            submitUser(e);
-          }}
-        >
-          Submit
-        </button>
-        <button
-          disabled={!arePlayersReady}
-          onClick={(e) => {
-            startGame(e);
-          }}
-        >
-          Start game
-        </button>
-        <label>{"Total number of players:" + listOfPlayers.length}</label>
-      </form>
-      {listOfPlayers.length > 0 ? (
-        <ul style={{ margin: "auto" }}>
-          {listOfPlayers.map((d) => (
-            <li key={d.id}>{d.name}</li>
-          ))}
-        </ul>
-      ) : null}
+          >
+            Submit
+          </button>
+          <button
+            disabled={!arePlayersReady}
+            onClick={(e) => {
+              startGame(e);
+            }}
+          >
+            Start game
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
