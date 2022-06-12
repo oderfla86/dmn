@@ -111,7 +111,7 @@ function Dashboard(props) {
             isAdmin.current = false;
           }
           if (boardState.shouldStartGame) {
-            props.gameReady(playerId.current);
+            props.gameReady(playerId.current, isAdmin.current, db.current);
           }
         }
       });

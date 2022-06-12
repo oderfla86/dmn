@@ -22,13 +22,6 @@ import { getDatabase, onValue, ref, update } from "firebase/database";
 // } from "../../Util";
 
 function Game(props) {
-  let app = useRef(null);
-  let db = useRef(null);
-  let gameRef = useRef(null);
-  let pointsRef = useRef(null);
-  let blockedRef = useRef(null);
-  let originalOrder = useRef(null);
-  let playersOrderLocal = useRef(null);
   const firebaseConfig = {
     apiKey: "AIzaSyA_T3E_8xIgUSf8VUxkEkcMY0S-InUp2Yo",
     authDomain: "dmn-multiplayer.firebaseapp.com",
@@ -38,14 +31,21 @@ function Game(props) {
     messagingSenderId: "209039171258",
     appId: "1:209039171258:web:06b6d6acc30a8a8a936c83",
   };
-
-  //   const [playersOrderLocally, setPlayersOrderLocally] = useState(null);
   const DELAY = 1000;
   const ROUND_DELAY = 5000;
+  let app = useRef(null);
+  let db = useRef(null);
+  let gameRef = useRef(null);
+  let pointsRef = useRef(null);
+  let blockedRef = useRef(null);
+  let originalOrder = useRef(null);
+  let playersOrderLocal = useRef(null);
   let leftLeaf = useRef(-1);
   let rightLeaf = useRef(-1);
   let gameBlockedTotal = useRef(0);
-  //   let gameOver = useRef(false);
+  let team1 = useRef(0);
+  let team2 = useRef(0);
+  let currentRound = useRef(null);
   let currentTurn = useRef(null);
   let startingPlayer = useRef(null);
   let selectedTile = useRef(null);
@@ -97,6 +97,11 @@ function Game(props) {
           JSON.parse(boardState.order),
           props.playerId
         );
+        // props.createNewHands(
+        //   originalOrder.current,
+        //   boardState.startingPlayer,
+        //   boardState.round
+        // );
         setP1Name(playersOrderLocal.current[0].name);
         setP2Name(playersOrderLocal.current[1].name);
         setP3Name(playersOrderLocal.current[2].name);
@@ -112,10 +117,10 @@ function Game(props) {
           ) {
             console.log("Calculating blocked game winner");
             let result = calculateBlockedGameWinner(
+              JSON.parse(playersOrderLocal.current[0].hand).length,
               JSON.parse(playersOrderLocal.current[1].hand).length,
               JSON.parse(playersOrderLocal.current[2].hand).length,
-              JSON.parse(playersOrderLocal.current[3].hand).length,
-              JSON.parse(playersOrderLocal.current[4].hand).length
+              JSON.parse(playersOrderLocal.current[3].hand).length
             );
             if (
               props.playerId === originalOrder.current[0].id ||
@@ -123,19 +128,37 @@ function Game(props) {
             ) {
               //I know I'm a team 1 player
               if (result.winner === 0) {
+                team1.current = team1Points + result.points;
                 update(pointsRef.current, {
                   team1Points: team1Points + result.points,
                 });
+              } else {
+                if (result.winner === 1) {
+                  team2.current = team2Points + result.points;
+                  update(pointsRef.current, {
+                    team2Points: team2Points + result.points,
+                  });
+                }
               }
             } else {
               //I know I'm a team 2 player
-              if (result.winner === 1) {
+              if (result.winner === 0) {
+                team2.current = team2Points + result.points;
                 update(pointsRef.current, {
                   team2Points: team2Points + result.points,
                 });
+              } else {
+                if (result.winner === 1) {
+                  team1.current = team1Points + result.points;
+                  update(pointsRef.current, {
+                    team1Points: team1Points + result.points,
+                  });
+                }
               }
             }
           }
+          //we know the round is over, so now we need to set up everything for the next round
+          prepareNextRound();
         } else {
           updateLocalState(boardState);
         }
@@ -146,6 +169,8 @@ function Game(props) {
       let pointsState = snapshot.val();
 
       if (pointsState) {
+        team1.current = pointsState.team1Points;
+        team2.current = pointsState.team2Points;
         setTeam1Name(pointsState.team1Name);
         setTeam2Name(pointsState.team2Name);
         setTeam1Points(pointsState.team1Points);
@@ -181,6 +206,23 @@ function Game(props) {
 
   function timeout(time) {
     return new Promise((res) => setTimeout(res, time));
+  }
+
+  async function prepareNextRound() {
+    await timeout(ROUND_DELAY);
+    debugger;
+    if (team1.current >= 100 || team2.current >= 100) {
+      console.info("GAME IS FINISHED");
+      console.info(`${team1Name} : ${team1.current}`);
+      console.info(`${team2Name} : ${team2.current}`);
+    } else {
+      props.createNewHands(
+        originalOrder.current,
+        startingPlayer.current,
+        currentRound.current
+      );
+      setIsRoundOver(false);
+    }
   }
 
   async function playerBlocked(playerBlockedId) {
@@ -225,6 +267,7 @@ function Game(props) {
     startingPlayer.current = boardState.startingPlayer;
     leftLeaf.current = boardState.leftLeaf;
     rightLeaf.current = boardState.rightLeaf;
+    currentRound.current = boardState.round;
 
     if (boardState.currentTurn === props.playerId) {
       //I'm the only user that can play, so we can search my hand for valid tiles
@@ -241,17 +284,6 @@ function Game(props) {
           isPlayerBlocked: props.playerId,
           isGameBlocked: gameBlockedTotal.current + 1,
         });
-        // if (gameBlockedTotal.current + 1 > 4) {
-        //   //game is blocked so no more plays are allowed
-        //   console.log("game is blocked");
-        //   update(gameRef.current, {
-        //     isRoundOver: true,
-        //   });
-        // } else {
-        //   update(gameRef.current, {
-        //     currentTurn: playersOrderLocal.current[1].id,
-        //   });
-        // }
       } else {
         setP1([...thisPlayer.playerHand]);
       }
@@ -266,27 +298,6 @@ function Game(props) {
     setP4(playersOrderLocal.current[3]);
     setTable(boardState.table ? JSON.parse(boardState.table) : []);
   }
-
-  //   async function prepareNextRound() {
-  //     await timeout(ROUND_DELAY);
-  //     debugger;
-  //     if (team1.current >= 100 || team2.current >= 100) {
-  //       console.info("GAME IS FINISHED");
-  //       console.info("TEAM 1:", team1.current);
-  //       console.info("TEAM 2:", team2.current);
-  //     } else {
-  //       gameOver.current = false;
-  //       setIsGameOver(false);
-  //       console.log("team1Points:", team1.current);
-  //       console.log("team2Points:", team2.current);
-  //       props.createNewHands(
-  //         totalRounds.current,
-  //         team1.current,
-  //         team2.current,
-  //         startingPlayer.current
-  //       );
-  //     }
-  //   }
 
   function getTileHandIndex(tile) {
     for (let i = 0; i < player1.length; i++) {
@@ -340,15 +351,16 @@ function Game(props) {
         props.playerId === originalOrder.current[0].id ||
         props.playerId === originalOrder.current[2].id
       ) {
-        let points = calculatePointsForWinners(player1, player3);
+        let points = calculatePointsForWinners(player2, player4);
         // setIsGameOver(true);
+        team1.current = team1Points + points;
         update(pointsRef.current, {
           team1Points: team1Points + points,
         });
         // prepareNextRound();
       } else {
         let points = calculatePointsForWinners(player2, player4);
-
+        team2.current = team2Points + points;
         update(pointsRef.current, {
           team2Points: team2Points + points,
         });
@@ -432,7 +444,7 @@ function Game(props) {
       />
       <Player
         container={"player2_container"}
-        style={"player2"}
+        playerStyle={"player2"}
         isPlayer={false}
         hand={player2.hand ? JSON.parse(player2.hand) : player2}
         name={player2Name}
@@ -453,7 +465,7 @@ function Game(props) {
       />
       <Player
         container={"player3_container"}
-        style={"player3"}
+        playerStyle={"player3"}
         isPlayer={false}
         hand={player3.hand ? JSON.parse(player3.hand) : player3}
         name={player3Name}
@@ -474,7 +486,7 @@ function Game(props) {
       />
       <Player
         container={"player4_container"}
-        style={"player4"}
+        playerStyle={"player4"}
         isPlayer={false}
         hand={player4.hand ? JSON.parse(player4.hand) : player4}
         name={player4Name}

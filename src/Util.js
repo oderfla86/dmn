@@ -227,28 +227,33 @@ export function tilesAvailableForPlayer(
         blocked = false;
       }
     } else {
-      if (
-        playerHand[i].rightValue !== leftLeaf &&
-        playerHand[i].leftValue !== leftLeaf &&
-        playerHand[i].rightValue !== rightLeaf &&
-        playerHand[i].leftValue !== rightLeaf
-      ) {
-        playerHand[i].enabled = false;
-      } else {
-        playerHand[i].enabled = true;
-        if (
-          playerHand[i].rightValue === leftLeaf ||
-          playerHand[i].leftValue === leftLeaf
-        ) {
-          playerHand[i].canPlayLeft = true;
-        }
-        if (
-          playerHand[i].rightValue === rightLeaf ||
-          playerHand[i].leftValue === rightLeaf
-        ) {
-          playerHand[i].canPlayRight = true;
-        }
+      if (table.length === 0) {
+        //player can start with any tile
         blocked = false;
+      } else {
+        if (
+          playerHand[i].rightValue !== leftLeaf &&
+          playerHand[i].leftValue !== leftLeaf &&
+          playerHand[i].rightValue !== rightLeaf &&
+          playerHand[i].leftValue !== rightLeaf
+        ) {
+          playerHand[i].enabled = false;
+        } else {
+          playerHand[i].enabled = true;
+          if (
+            playerHand[i].rightValue === leftLeaf ||
+            playerHand[i].leftValue === leftLeaf
+          ) {
+            playerHand[i].canPlayLeft = true;
+          }
+          if (
+            playerHand[i].rightValue === rightLeaf ||
+            playerHand[i].leftValue === rightLeaf
+          ) {
+            playerHand[i].canPlayRight = true;
+          }
+          blocked = false;
+        }
       }
     }
   }

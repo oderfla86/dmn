@@ -50,7 +50,7 @@ function Player(props) {
   } else {
     return (
       <div className={`${props.container}`}>
-        <div className={`${props.style}`}>
+        <div className={`${props.playerStyle}`}>
           {props.hand.map(function (player_tile) {
             return (
               <button
