@@ -356,10 +356,10 @@ export function calculatePointsForWinners(hand_1, hand_2) {
 }
 
 export function calculateBlockedGameWinner(hand_1, hand_2, hand_3, hand_4) {
-  const sum_1 = getHandTotalPoints(JSON.parse(hand_1.hand));
-  const sum_2 = getHandTotalPoints(JSON.parse(hand_2.hand));
-  const sum_3 = getHandTotalPoints(JSON.parse(hand_3.hand));
-  const sum_4 = getHandTotalPoints(JSON.parse(hand_4.hand));
+  const sum_1 = getHandTotalPoints(hand_1);
+  const sum_2 = getHandTotalPoints(hand_2);
+  const sum_3 = getHandTotalPoints(hand_3);
+  const sum_4 = getHandTotalPoints(hand_4);
 
   if (sum_1 + sum_3 > sum_2 + sum_4) {
     return {
