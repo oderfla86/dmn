@@ -62,6 +62,7 @@ function App() {
           key={new Date().getTime()}
           playerId={playerId}
           createNewHands={createNewHands}
+          isAdmin={isAdmin}
         />
       ) : (
         <Dashboard gameReady={gameReadyToStart} />

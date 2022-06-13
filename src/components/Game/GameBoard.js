@@ -141,7 +141,7 @@ function Game(props) {
             }
           }
           //we know the round is over, so now we need to set up everything for the next round
-          prepareNextRound();
+          // prepareNextRound();
         } else {
           updateLocalState(boardState);
         }
@@ -192,7 +192,6 @@ function Game(props) {
   }
 
   async function prepareNextRound() {
-    await timeout(20000);
     if (team1.current >= 100 || team2.current >= 100) {
       console.info("GAME IS FINISHED");
       console.info(`${team1Name} : ${team1.current}`);
@@ -403,6 +402,35 @@ function Game(props) {
           transform: "translate(-50%, -50%)",
         }}
       />
+      <div
+        style={{
+          textAlign: "center",
+          borderRadius: "5px",
+          position: "absolute",
+          height: "50px",
+          left: "75%",
+          top: "6%",
+        }}
+      >
+        <button
+          onClick={() => prepareNextRound()}
+          style={{
+            backgroundColor: "#90ee90",
+            textAlign: "center",
+            borderRadius: "5px",
+            position: "absolute",
+            color: "black",
+            height: "50px",
+            width: "100px",
+            left: "75%",
+            top: "6%",
+            transform: "translate(-50%, -50%)",
+            visibility: isRoundOver && props.isAdmin ? "visible" : "hidden",
+          }}
+        >
+          Start next round
+        </button>
+      </div>
       <Score
         team1Points={team1Points}
         team2Points={team2Points}
