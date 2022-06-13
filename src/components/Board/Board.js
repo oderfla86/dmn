@@ -35,7 +35,11 @@ function Board(props) {
               style={{
                 width: "50px",
                 height: "30px",
-                background: table_tile.isStartingTile ? "#FFC300" : null,
+                background: table_tile.isStartingTile
+                  ? "#FFC300"
+                  : table_tile.leftValue < 0
+                  ? "#90ee90"
+                  : null,
                 borderColor: "black",
               }}
               key={table_tile.name}
@@ -53,7 +57,11 @@ function Board(props) {
               style={{
                 width: "30px",
                 height: "50px",
-                background: table_tile.isStartingTile ? "#FFC300" : null,
+                background: table_tile.isStartingTile
+                  ? "#FFC300"
+                  : table_tile.leftValue < 0
+                  ? "#90ee90"
+                  : null,
                 borderColor: "black",
               }}
               key={table_tile.name}

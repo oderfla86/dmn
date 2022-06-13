@@ -441,6 +441,7 @@ function Game(props) {
         playerPlaysTile={playerPlaysTile}
         isPlayerBlocked={isPlayer1Blocked}
         isHand={startingPlayer.current === props.playerId ? true : false}
+        isMyTurn={props.playerId === currentTurn.current ? true : false}
       />
       <Player
         container={"player2_container"}
@@ -462,6 +463,9 @@ function Game(props) {
             player2.id === startingPlayer.current ? "visible" : "hidden",
         }}
         nameClass={"player2_name"}
+        isMyTurn={
+          playersOrderLocal.current[1].id === currentTurn.current ? true : false
+        }
       />
       <Player
         container={"player3_container"}
@@ -483,6 +487,9 @@ function Game(props) {
             player3.id === startingPlayer.current ? "visible" : "hidden",
         }}
         nameClass={"player3_name"}
+        isMyTurn={
+          playersOrderLocal.current[2].id === currentTurn.current ? true : false
+        }
       />
       <Player
         container={"player4_container"}
@@ -504,6 +511,9 @@ function Game(props) {
             player4.id === startingPlayer.current ? "visible" : "hidden",
         }}
         nameClass={"player2_name"}
+        isMyTurn={
+          playersOrderLocal.current[3].id === currentTurn.current ? true : false
+        }
       />
       <Board table={table} boardTilePressed={boardTilePressed} />
     </div>
