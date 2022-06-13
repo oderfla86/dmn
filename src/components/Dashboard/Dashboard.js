@@ -61,22 +61,6 @@ function Dashboard(props) {
         id: playerId.current,
       });
 
-      let blockedRef = ref(db.current, `blocked`);
-      set(blockedRef, {
-        isGameRunning: false,
-        isPlayerBlocked: false,
-        isGameBlocked: 0,
-      });
-
-      let pointsRef = ref(db.current, `points`);
-      set(pointsRef, {
-        isGameRunning: false,
-        team1Points: 0,
-        team2Points: 0,
-        team1Name: "TEAM 1",
-        team2Name: "TEAM 2",
-      });
-
       onDisconnect(playerRef.current).remove();
 
       onValue(allPlayersRef, (snapshot) => {
@@ -126,11 +110,22 @@ function Dashboard(props) {
     let orderOfPlayers = randomisePlayersTurnOrder(listOfPlayers, newState); //returns a list of objects with username and firebase id + hand
     let startingPlayer = getStsartingPlayer(orderOfPlayers); //returns the id of the user who has 6:6 in their hand
 
+    let blockedRef = ref(db.current, `blocked`);
+    set(blockedRef, {
+      isGameRunning: false,
+      isPlayerBlocked: false,
+      isGameBlocked: 0,
+    });
+
     let pointsRef = ref(db.current, `points`);
-    update(pointsRef, {
+    set(pointsRef, {
+      isGameRunning: false,
+      team1Points: 0,
+      team2Points: 0,
       team1Name: orderOfPlayers[0].name + "-" + orderOfPlayers[2].name,
       team2Name: orderOfPlayers[1].name + "-" + orderOfPlayers[3].name,
     });
+
     update(gameRef.current, {
       shouldStartGame: true,
       isGameRunning: false,
@@ -184,7 +179,7 @@ function Dashboard(props) {
           position: "relative",
         }}
       >
-        <label>Welcome to DMN</label>
+        <label>Welcome to DMN - v0.3.1</label>
       </div>
       <div
         style={{
@@ -230,6 +225,7 @@ function Dashboard(props) {
             Username:
             <input
               disabled={disable}
+              maxLength={6}
               type="text"
               onChange={(e) => {
                 setName(e.target.value);

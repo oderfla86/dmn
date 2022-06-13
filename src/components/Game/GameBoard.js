@@ -97,11 +97,12 @@ function Game(props) {
           JSON.parse(boardState.order),
           props.playerId
         );
-        // props.createNewHands(
-        //   originalOrder.current,
-        //   boardState.startingPlayer,
-        //   boardState.round
-        // );
+
+        setP2(playersOrderLocal.current[1]);
+        setP3(playersOrderLocal.current[2]);
+        setP4(playersOrderLocal.current[3]);
+        setTable(boardState.table ? JSON.parse(boardState.table) : []);
+
         setP1Name(playersOrderLocal.current[0].name);
         setP2Name(playersOrderLocal.current[1].name);
         setP3Name(playersOrderLocal.current[2].name);
@@ -110,55 +111,37 @@ function Game(props) {
         if (boardState.isRoundOver) {
           setIsRoundOver(true);
           if (
-            JSON.parse(playersOrderLocal.current[0].hand).length > 0 &&
-            JSON.parse(playersOrderLocal.current[1].hand).length > 0 &&
-            JSON.parse(playersOrderLocal.current[2].hand).length > 0 &&
-            JSON.parse(playersOrderLocal.current[3].hand).length > 0
+            JSON.parse(originalOrder.current[0].hand).length > 0 &&
+            JSON.parse(originalOrder.current[1].hand).length > 0 &&
+            JSON.parse(originalOrder.current[2].hand).length > 0 &&
+            JSON.parse(originalOrder.current[3].hand).length > 0
           ) {
             console.log("Calculating blocked game winner");
-            let result = calculateBlockedGameWinner(
-              JSON.parse(playersOrderLocal.current[0].hand),
-              JSON.parse(playersOrderLocal.current[1].hand),
-              JSON.parse(playersOrderLocal.current[2].hand),
-              JSON.parse(playersOrderLocal.current[3].hand)
-            );
-            if (
-              props.playerId === originalOrder.current[0].id ||
-              props.playerId === originalOrder.current[2].id
-            ) {
-              //I know I'm a team 1 player
+            if (props.playerId === currentTurn.current) {
+              //only want player that blocked to execute this
+              let result = calculateBlockedGameWinner(
+                JSON.parse(originalOrder.current[0].hand),
+                JSON.parse(originalOrder.current[1].hand),
+                JSON.parse(originalOrder.current[2].hand),
+                JSON.parse(originalOrder.current[3].hand)
+              );
               if (result.winner === 0) {
-                team1.current = team1Points + result.points;
+                team1.current += result.points;
                 update(pointsRef.current, {
-                  team1Points: team1Points + result.points,
+                  team1Points: team1.current,
                 });
               } else {
                 if (result.winner === 1) {
-                  team2.current = team2Points + result.points;
+                  team2.current += result.points;
                   update(pointsRef.current, {
-                    team2Points: team2Points + result.points,
-                  });
-                }
-              }
-            } else {
-              //I know I'm a team 2 player
-              if (result.winner === 0) {
-                team2.current = team2Points + result.points;
-                update(pointsRef.current, {
-                  team2Points: team2Points + result.points,
-                });
-              } else {
-                if (result.winner === 1) {
-                  team1.current = team1Points + result.points;
-                  update(pointsRef.current, {
-                    team1Points: team1Points + result.points,
+                    team2Points: team2.current,
                   });
                 }
               }
             }
           }
           //we know the round is over, so now we need to set up everything for the next round
-          prepareNextRound();
+          // prepareNextRound();
         } else {
           updateLocalState(boardState);
         }
@@ -209,8 +192,6 @@ function Game(props) {
   }
 
   async function prepareNextRound() {
-    await timeout(ROUND_DELAY);
-    debugger;
     if (team1.current >= 100 || team2.current >= 100) {
       console.info("GAME IS FINISHED");
       console.info(`${team1Name} : ${team1.current}`);
@@ -226,7 +207,6 @@ function Game(props) {
   }
 
   async function playerBlocked(playerBlockedId) {
-    console.log(playerBlockedId);
     if (playerBlockedId === props.playerId) {
       setPlayer1Blocked(true);
       await timeout(DELAY);
@@ -260,9 +240,6 @@ function Game(props) {
   }
 
   async function updateLocalState(boardState) {
-    console.log("current turn:", boardState.currentTurn);
-    console.log("Local playerId:", props.playerId);
-
     currentTurn.current = boardState.currentTurn;
     startingPlayer.current = boardState.startingPlayer;
     leftLeaf.current = boardState.leftLeaf;
@@ -293,10 +270,10 @@ function Game(props) {
       setP1([...disablePlayerHand(aux_hand)]);
     }
     //disable rest of players hands as well
-    setP2(playersOrderLocal.current[1]);
-    setP3(playersOrderLocal.current[2]);
-    setP4(playersOrderLocal.current[3]);
-    setTable(boardState.table ? JSON.parse(boardState.table) : []);
+    // setP2(playersOrderLocal.current[1]);
+    // setP3(playersOrderLocal.current[2]);
+    // setP4(playersOrderLocal.current[3]);
+    // setTable(boardState.table ? JSON.parse(boardState.table) : []);
   }
 
   function getTileHandIndex(tile) {
@@ -308,8 +285,6 @@ function Game(props) {
   }
 
   async function boardTilePressed(tile) {
-    console.log("tile pressed board");
-    console.log(tile);
     if (gameBlockedTotal.current !== 0) {
       console.log("resetting blocked values");
       update(blockedRef.current, {
@@ -317,7 +292,6 @@ function Game(props) {
         isPlayerBlocked: false,
       });
     }
-    console.log(`Player ${props.playerId} played: ${selectedTile.current.id}`);
     let updatedPlayStatus = placePlayerTile(
       selectedTile.current,
       leftLeaf.current,
@@ -353,16 +327,16 @@ function Game(props) {
       ) {
         let points = calculatePointsForWinners(player2, player4);
         // setIsGameOver(true);
-        team1.current = team1Points + points;
+        team1.current += points;
         update(pointsRef.current, {
-          team1Points: team1Points + points,
+          team1Points: team1.current,
         });
         // prepareNextRound();
       } else {
         let points = calculatePointsForWinners(player2, player4);
-        team2.current = team2Points + points;
+        team2.current += points;
         update(pointsRef.current, {
-          team2Points: team2Points + points,
+          team2Points: team2.current,
         });
       }
       update(gameRef.current, {
@@ -428,6 +402,35 @@ function Game(props) {
           transform: "translate(-50%, -50%)",
         }}
       />
+      <div
+        style={{
+          textAlign: "center",
+          borderRadius: "5px",
+          position: "absolute",
+          height: "50px",
+          left: "75%",
+          top: "6%",
+        }}
+      >
+        <button
+          onClick={() => prepareNextRound()}
+          style={{
+            backgroundColor: "#90ee90",
+            textAlign: "center",
+            borderRadius: "5px",
+            position: "absolute",
+            color: "black",
+            height: "50px",
+            width: "100px",
+            left: "75%",
+            top: "6%",
+            transform: "translate(-50%, -50%)",
+            visibility: isRoundOver && props.isAdmin ? "visible" : "hidden",
+          }}
+        >
+          Start next round
+        </button>
+      </div>
       <Score
         team1Points={team1Points}
         team2Points={team2Points}
@@ -441,6 +444,7 @@ function Game(props) {
         playerPlaysTile={playerPlaysTile}
         isPlayerBlocked={isPlayer1Blocked}
         isHand={startingPlayer.current === props.playerId ? true : false}
+        isMyTurn={props.playerId === currentTurn.current ? true : false}
       />
       <Player
         container={"player2_container"}
@@ -462,6 +466,13 @@ function Game(props) {
             player2.id === startingPlayer.current ? "visible" : "hidden",
         }}
         nameClass={"player2_name"}
+        isMyTurn={
+          playersOrderLocal.current !== null
+            ? playersOrderLocal.current[1].id === currentTurn.current
+              ? true
+              : false
+            : null
+        }
       />
       <Player
         container={"player3_container"}
@@ -483,6 +494,13 @@ function Game(props) {
             player3.id === startingPlayer.current ? "visible" : "hidden",
         }}
         nameClass={"player3_name"}
+        isMyTurn={
+          playersOrderLocal.current !== null
+            ? playersOrderLocal.current[2].id === currentTurn.current
+              ? true
+              : false
+            : null
+        }
       />
       <Player
         container={"player4_container"}
@@ -504,6 +522,13 @@ function Game(props) {
             player4.id === startingPlayer.current ? "visible" : "hidden",
         }}
         nameClass={"player2_name"}
+        isMyTurn={
+          playersOrderLocal.current !== null
+            ? playersOrderLocal.current[3].id === currentTurn.current
+              ? true
+              : false
+            : null
+        }
       />
       <Board table={table} boardTilePressed={boardTilePressed} />
     </div>
