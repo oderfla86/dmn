@@ -17,8 +17,6 @@ function App() {
     setIsLoading(false);
   }
   function createNewHands(order, startingPlayer, round) {
-    // setIsLoading(true);
-    debugger;
     //only admin can execute this part of the code
     if (isAdmin) {
       let newState = createGame(); // contains hands and table values. We need to assign them to each player now, randomly.
