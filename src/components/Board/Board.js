@@ -50,7 +50,9 @@ function Board(props) {
               ) : (
                 <button
                   style={{
-                    borderColor: table_tile.isStartingTile ? "yellow" : "white",
+                    borderColor: table_tile.isStartingTile
+                      ? "#FFA200"
+                      : "black",
                     background: "transparent",
                     padding: "0",
                     width: "55px",
@@ -91,7 +93,7 @@ function Board(props) {
             ) : (
               <button
                 style={{
-                  borderColor: "white",
+                  borderColor: table_tile.isStartingTile ? "#FFA200" : "black",
                   background: "transparent",
                   padding: "0",
                   width: "35px",
