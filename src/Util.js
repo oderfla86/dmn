@@ -287,6 +287,7 @@ export function placePlayerTile(
       playerTile.rightValue === leftLeaf
         ? playerTile.leftValue + ":" + playerTile.rightValue
         : playerTile.rightValue + ":" + playerTile.leftValue;
+    newTile.image = newTile.name.replace(":", "");
     table.unshift(newTile);
   } else {
     //user clicked on the right side of the table
@@ -300,6 +301,7 @@ export function placePlayerTile(
       playerTile.rightValue === rightLeaf
         ? playerTile.rightValue + ":" + playerTile.leftValue
         : playerTile.leftValue + ":" + playerTile.rightValue;
+    newTile.image = newTile.name.replace(":", "");
     table.push(newTile);
   }
 

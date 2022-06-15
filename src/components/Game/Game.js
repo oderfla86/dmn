@@ -218,6 +218,7 @@ function Game(props) {
             ? simulationTurn.tile.rightLeaf
             : rightLeaf.current;
         setTable([...simulationTurn.table]);
+        console.log(simulationTurn.table);
         updateHandData(turn, simulationTurn.hand);
         if (simulationTurn.hand.length === 0) {
           console.log("Rounds is over");
