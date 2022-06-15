@@ -174,6 +174,7 @@ export function searchTileForSimulation(
             ? handTile.leftValue + ":" + handTile.rightValue
             : handTile.rightValue + ":" + handTile.leftValue;
         playerHand.splice(i, 1);
+        newTile.image = newTile.name.replace(":", "");
         table.unshift(newTile);
         blocked = false;
         break;
@@ -191,6 +192,7 @@ export function searchTileForSimulation(
           handTile.rightValue === rightLeaf
             ? handTile.rightValue + ":" + handTile.leftValue
             : handTile.leftValue + ":" + handTile.rightValue;
+        newTile.image = newTile.name.replace(":", "");
         playerHand.splice(i, 1);
         table.push(newTile);
         blocked = false;
