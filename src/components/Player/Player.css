@@ -49,8 +49,8 @@
 .player2_container {
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
-    width: 500px;
-    height: 80px;
+    width: 700px;
+    height: 120px;
     position: absolute;
     left: 96%;
     top: 50%;
@@ -58,16 +58,16 @@
 }
 .player2 {
     background-color: transparent;
-    width: 320px;
-    height: 60px;
+    width: 500px;
+    height: 100px;
     position: absolute;
     left: 20%;
     top: 13%;
 }
 .player_tile{
-    width: 40px;
-    height: 60px;
-    margin-right: 5px;
+    width: 48px;
+    height: 90px;
+    margin-right: 10px;
 }
 .player2_blocked {
     background-color: #36454F;
@@ -97,8 +97,8 @@
 .player3_container {
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
-    width: 500px;
-    height: 80px;
+    width: 700px;
+    height: 120px;
     position: absolute;
     left: 50%;
     top: 7%;
@@ -106,8 +106,8 @@
 }
 .player3 {
     background-color: transparent;
-    width: 320px;
-    height: 60px;
+    width: 500px;
+    height: 100px;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -141,8 +141,8 @@
 .player4_container {
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
-    width: 500px;
-    height: 80px;
+    width: 700px;
+    height: 120px;
     position: absolute;
     left: 4%;
     top: 50%;
@@ -150,8 +150,8 @@
 }
 .player4 {
     background-color: transparent;
-    width: 320px;
-    height: 60px;
+    width: 500px;
+    height: 100px;
     position: absolute;
     left: 20%;
     top: 13%;

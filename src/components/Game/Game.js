@@ -17,7 +17,7 @@ import {
 
 function Game(props) {
   const DELAY = 1000;
-  const ROUND_DELAY = 5000;
+  const ROUND_DELAY = 10000;
   let leftLeaf = useRef(-1);
   let rightLeaf = useRef(-1);
   let gameBlocked = useRef(0);

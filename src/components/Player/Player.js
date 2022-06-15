@@ -9,7 +9,6 @@ function Player(props) {
           {props.hand.map(function (player_tile) {
             return (
               <button
-                className=""
                 style={{
                   background: player_tile.isSelected
                     ? "#90ee90"
@@ -53,27 +52,68 @@ function Player(props) {
       </div>
     );
   } else {
-    return (
-      <div className={`${props.container}`}>
-        <div className={`${props.style}`}>
-          {props.hand.map(function (player_tile) {
-            return (
-              <button
-                className={`${props.tileStyle}`}
-                disabled={!player_tile.enabled}
-                key={player_tile.name}
-              >
-                {props.isGameOver ? player_tile.name : ""}
-              </button>
-            );
-          })}
+    if (props.isGameOver) {
+      return (
+        <div className={`${props.container}`}>
+          <div className={`${props.style}`}>
+            {props.hand.map(function (player_tile) {
+              return (
+                <button
+                  style={{
+                    background: "transparent",
+                    border: "transparent",
+                    marginRight: "5px",
+                  }}
+                  disabled={!player_tile.enabled}
+                  key={player_tile.name}
+                >
+                  <img
+                    width={"48px"}
+                    height={"90px"}
+                    disabled={!player_tile.enabled}
+                    src={
+                      player_tile.leftValue === player_tile.rightValue
+                        ? images(`./${player_tile.image}.png`)
+                        : images(`./${player_tile.image}v.png`)
+                    }
+                  />
+                </button>
+              );
+            })}
+          </div>
+          <div className={`${props.blockedClass}`} style={props.blockedStyle}>
+            Blocked
+          </div>
+          <span
+            className={`${props.handClass}`}
+            style={props.isHandStyle}
+          ></span>
         </div>
-        <div className={`${props.blockedClass}`} style={props.blockedStyle}>
-          Blocked
+      );
+    } else {
+      return (
+        <div className={`${props.container}`}>
+          <div className={`${props.style}`}>
+            {props.hand.map(function (player_tile) {
+              return (
+                <button
+                  className={`${props.tileStyle}`}
+                  disabled={!player_tile.enabled}
+                  key={player_tile.name}
+                ></button>
+              );
+            })}
+          </div>
+          <div className={`${props.blockedClass}`} style={props.blockedStyle}>
+            Blocked
+          </div>
+          <span
+            className={`${props.handClass}`}
+            style={props.isHandStyle}
+          ></span>
         </div>
-        <span className={`${props.handClass}`} style={props.isHandStyle}></span>
-      </div>
-    );
+      );
+    }
   }
 }
 
