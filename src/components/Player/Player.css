@@ -1,26 +1,26 @@
 .player1_container {
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
-    width: 500px;
-    height: 80px;
+    width: 700px;
+    height: 120px;
     position: absolute;
     left: 50%;
-    top: 93%;
+    top: 92%;
     transform: translate(-50%, -50%);
 }
 .player1 {
     background-color: transparent;
-    width: 320px;
-    height: 60px;
-    top: 15%;
+    width: 470px;
+    height: 95px;
+    top: 10%;
     left: 15%;
     position: relative;
 }
 .player1_tile {
-    width: 40px;
-    height: 60px;
+    width: 80px;
+    height: 120px;
     margin-right: 5px;
-    border-color: black;
+    border-color: transparent;
 }
 .player1_blocked {
     background-color: #36454F;

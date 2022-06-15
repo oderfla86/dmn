@@ -1,14 +1,15 @@
 function Board(props) {
+  const images = require.context("../../resources", true);
   return (
     <div
       style={{
         backgroundColor: "#36454F",
         width: "85%",
-        height: "75%",
+        height: "70%",
         position: "absolute",
         borderRadius: "10px",
         left: "50%",
-        top: "50%",
+        top: "48%",
         transform: "translate(-50%, -50%)",
         textAlign: "center",
       }}

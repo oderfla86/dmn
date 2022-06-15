@@ -8,6 +8,7 @@ class Tile {
     this.rightLeaf = -1;
     this.leftLeaf = -1;
     this.enabled = true;
+    this.image = leftValue.toString() + rightValue.toString();
     this.isStartingTile = false;
     this.isSelected = false;
     this.canPlayLeft = false;

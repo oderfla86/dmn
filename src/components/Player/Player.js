@@ -1,6 +1,7 @@
 import "./Player.css";
 
 function Player(props) {
+  const images = require.context("../../resources", true);
   if (props.isPlayer) {
     return (
       <div className="player1_container">
@@ -8,15 +9,28 @@ function Player(props) {
           {props.hand.map(function (player_tile) {
             return (
               <button
-                className="player1_tile"
+                className=""
+                style={{
+                  background: player_tile.isSelected
+                    ? "#90ee90"
+                    : "transparent",
+                  border: "transparent",
+                  marginRight: "5px",
+                }}
                 onClick={() => props.playerPlaysTile(player_tile)}
                 disabled={!player_tile.enabled}
-                style={{
-                  background: player_tile.isSelected ? "#90ee90" : null,
-                }}
                 key={player_tile.name}
               >
-                {player_tile.name}
+                <img
+                  width={"48px"}
+                  height={"90px"}
+                  disabled={!player_tile.enabled}
+                  src={
+                    player_tile.leftValue === player_tile.rightValue
+                      ? images(`./${player_tile.image}.png`)
+                      : images(`./${player_tile.image}v.png`)
+                  }
+                />
               </button>
             );
           })}
