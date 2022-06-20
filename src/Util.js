@@ -13,6 +13,10 @@ class Tile {
     this.isSelected = false;
     this.canPlayLeft = false;
     this.canPlayRight = false;
+    this.leftPos = 0;
+    this.topPos = 0;
+    this.position = "vertical";
+    this.isValidLeaf = false;
   }
 }
 
@@ -22,6 +26,10 @@ let player3 = [];
 let player4 = [];
 let tilePool = [];
 let table = [];
+let leftLimitReached = false;
+let rightLimitReached = false;
+let newLeftTop = 0;
+let newRightTop = 0;
 
 function startGame() {
   return {
@@ -78,15 +86,19 @@ function dealTilesToPlayers(arr) {
 }
 
 function removePlaceholderTilesFromBoard(table) {
-  if (table[0].leftValue < 0) {
-    table.splice(0, 1);
-  }
-
-  if (table[table.length - 1].leftValue < 0) {
-    table.splice(table.length - 1, 1);
-  }
+  table[0].isValidLeaf = false;
+  table[table.length - 1].isValidLeaf = false;
 
   return table;
+  //   if (table[0].leftValue < 0) {
+  //     table.splice(0, 1);
+  //   }
+
+  //   if (table[table.length - 1].leftValue < 0) {
+  //     table.splice(table.length - 1, 1);
+  //   }
+
+  //   return table;
 }
 
 function getHandTotalPoints(hand) {
@@ -97,6 +109,10 @@ function getHandTotalPoints(hand) {
 
 export function createGame() {
   console.log("Initialising game data");
+  newLeftTop = 0;
+  newRightTop = 0;
+  leftLimitReached = false;
+  rightLimitReached = false;
   player1 = [];
   player2 = [];
   player3 = [];
@@ -116,11 +132,15 @@ export function searchTileForSimulation(
   leftLeaf,
   rightLeaf,
   table,
-  totalRounds
+  totalRounds,
+  leftMargin,
+  rightMargin
 ) {
   let newTile = null;
   let blocked = true;
-  //we need to add an extra check in here
+  let newLeftMargin = leftMargin;
+  let newRightMargin = rightMargin;
+  // //we need to add an extra check in here
   if (totalRounds === 0 && table.length === 0) {
     //we know is starting, so we can start with 6:6 or a different tile
     newTile = playerHand.find((tile) => tile.id === "6:6");
@@ -129,7 +149,10 @@ export function searchTileForSimulation(
       newTile.rightLeaf = newTile.rightValue;
       newTile.isStartingTile = true;
       playerHand = playerHand.filter((tile) => tile.id !== "6:6");
-      table.push(newTile);
+      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
+      table.push(updatedTile.tile);
+      newLeftMargin = updatedTile.leftMargin;
+      newRightMargin = updatedTile.rightMargin;
       blocked = false;
     } else {
       //player doesn't have 6:6, we pick first one
@@ -137,7 +160,10 @@ export function searchTileForSimulation(
       newTile.leftLeaf = newTile.leftValue;
       newTile.rightLeaf = newTile.rightValue;
       newTile.isStartingTile = true;
-      table.push(newTile);
+      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
+      table.push(updatedTile.tile);
+      newLeftMargin = updatedTile.leftMargin;
+      newRightMargin = updatedTile.rightMargin;
       blocked = false;
     }
   } else if (totalRounds > 0 && table.length === 0) {
@@ -148,20 +174,25 @@ export function searchTileForSimulation(
       newTile.rightLeaf = newTile.rightValue;
       newTile.isStartingTile = true;
       playerHand = playerHand.filter((tile) => tile.id !== newTile.id);
-      table.push(newTile);
+      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
+      table.push(updatedTile.tile);
+      newLeftMargin = updatedTile.leftMargin;
+      newRightMargin = updatedTile.rightMargin;
       blocked = false;
     } else {
       newTile = playerHand.shift();
       newTile.leftLeaf = newTile.leftValue;
       newTile.rightLeaf = newTile.rightValue;
       newTile.isStartingTile = true;
-      table.push(newTile);
+      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
+      table.push(updatedTile.tile);
+      newLeftMargin = updatedTile.leftMargin;
+      newRightMargin = updatedTile.rightMargin;
       blocked = false;
     }
   } else {
     for (let i = 0; i < playerHand.length; i++) {
       let handTile = playerHand[i];
-
       if (handTile.rightValue === leftLeaf || handTile.leftValue === leftLeaf) {
         newTile = handTile;
         newTile.leftLeaf =
@@ -175,6 +206,17 @@ export function searchTileForSimulation(
             : handTile.rightValue + ":" + handTile.leftValue;
         playerHand.splice(i, 1);
         newTile.image = newTile.name.replace(":", "");
+        //this tile will be added to the left side
+        let updatedTile = setTileBoardPosition(
+          leftMargin,
+          rightMargin,
+          newTile,
+          "left",
+          table
+        );
+        newTile = updatedTile.tile;
+        newLeftMargin = updatedTile.leftMargin;
+        newRightMargin = updatedTile.rightMargin;
         table.unshift(newTile);
         blocked = false;
         break;
@@ -193,6 +235,17 @@ export function searchTileForSimulation(
             ? handTile.rightValue + ":" + handTile.leftValue
             : handTile.leftValue + ":" + handTile.rightValue;
         newTile.image = newTile.name.replace(":", "");
+        //this tile will be added to the right side
+        let updatedTile = setTileBoardPosition(
+          leftMargin,
+          rightMargin,
+          newTile,
+          "right",
+          table
+        );
+        newTile = updatedTile.tile;
+        newLeftMargin = updatedTile.leftMargin;
+        newRightMargin = updatedTile.rightMargin;
         playerHand.splice(i, 1);
         table.push(newTile);
         blocked = false;
@@ -200,12 +253,13 @@ export function searchTileForSimulation(
       }
     }
   }
-
   return {
     tile: newTile,
     hand: playerHand,
     table: table,
     blocked: blocked,
+    leftMargin: newLeftMargin,
+    rightMargin: newRightMargin,
   };
 }
 
@@ -270,7 +324,9 @@ export function placePlayerTile(
   leftLeaf,
   rightLeaf,
   table,
-  isLeftSideClicked
+  isLeftSideClicked,
+  leftMargin,
+  rightMargin
 ) {
   removePlaceholderTilesFromBoard(table);
   let newTile = null;
@@ -288,6 +344,16 @@ export function placePlayerTile(
         ? playerTile.leftValue + ":" + playerTile.rightValue
         : playerTile.rightValue + ":" + playerTile.leftValue;
     newTile.image = newTile.name.replace(":", "");
+    let updatedTile = setTileBoardPosition(
+      leftMargin,
+      rightMargin,
+      newTile,
+      "left",
+      table
+    );
+    newTile = updatedTile.tile;
+    leftMargin = updatedTile.leftMargin;
+    rightMargin = updatedTile.rightMargin;
     table.unshift(newTile);
   } else {
     //user clicked on the right side of the table
@@ -302,12 +368,24 @@ export function placePlayerTile(
         ? playerTile.rightValue + ":" + playerTile.leftValue
         : playerTile.leftValue + ":" + playerTile.rightValue;
     newTile.image = newTile.name.replace(":", "");
+    let updatedTile = setTileBoardPosition(
+      leftMargin,
+      rightMargin,
+      newTile,
+      "right",
+      table
+    );
+    newTile = updatedTile.tile;
+    leftMargin = updatedTile.leftMargin;
+    rightMargin = updatedTile.rightMargin;
     table.push(newTile);
   }
 
   return {
     tile: newTile,
     table: table,
+    leftMargin: leftMargin,
+    rightMargin: rightMargin,
   };
 }
 
@@ -331,18 +409,29 @@ export function getTileHandIndex(tile, hand) {
 }
 
 export function createBoardPlaceholderTiles(table, tile) {
-  table = removePlaceholderTilesFromBoard(table);
-  if (tile.canPlayLeft) {
-    let t = new Tile(-1, -2);
-    table.unshift(t);
-  }
+  table[0].isValidLeaf = false;
+  table[table.length - 1].isValidLeaf = false;
 
+  if (tile.canPlayLeft) {
+    table[0].isValidLeaf = true;
+  }
   if (tile.canPlayRight) {
-    let t = new Tile(-2, -1);
-    table.push(t);
+    table[table.length - 1].isValidLeaf = true;
   }
 
   return table;
+  // table = removePlaceholderTilesFromBoard(table);
+  // if (tile.canPlayLeft) {
+  //   let t = new Tile(-1, -2);
+  //   table.unshift(t);
+  // }
+
+  // if (tile.canPlayRight) {
+  //   let t = new Tile(-2, -1);
+  //   table.push(t);
+  // }
+
+  // return table;
 }
 
 export function calculatePointsForWinners(hand_1, hand_2) {
@@ -389,4 +478,239 @@ export function getStsartingPlayer(hand_1, hand_2, hand_3, hand_4) {
   if (hand_4.find((tile) => tile.id === "6:6")) {
     return 3;
   }
+}
+
+export function setTileBoardPosition(
+  leftMargin,
+  rightMargin,
+  tile,
+  pos,
+  table
+) {
+  if (tile.leftValue === tile.rightValue) {
+    //we know is a double so we fixate the height
+    tile.topPos = 207;
+    if (tile.isStartingTile) {
+      //we put it in the middle and update both margin values
+      tile.leftPos = leftMargin - 22; //half the width of the tile
+      leftMargin = leftMargin - 22;
+      rightMargin = rightMargin + 22;
+    } else {
+      //we need to know if we are playing in the right or the left of the board (check pos value)
+      if (pos === "left") {
+        if (!leftLimitReached) {
+          if (leftMargin < 100) {
+            console.log("we need to go up");
+            leftLimitReached = true;
+            setTileBoardVerticalPosition(
+              leftMargin,
+              rightMargin,
+              tile,
+              pos,
+              table
+            );
+            console.log("after:", newLeftTop);
+          } else {
+            //we play on the left
+            leftMargin = leftMargin - 44;
+            tile.leftPos = leftMargin;
+          }
+        } else {
+          if (leftMargin < 100) {
+            //is the first tile, so needs to be horizontal no matter what
+            tile.topPos = newLeftTop === 121 ? 77 : 98;
+            tile.leftPos = leftMargin;
+            leftMargin = leftMargin + 86;
+            tile.image = tile.image + "h";
+            tile.position = "horizontal";
+          } else {
+            //we play normal tile in the opposite direction
+            tile.topPos = newLeftTop === 121 ? 56 : 77;
+            tile.leftPos = leftMargin;
+            leftMargin = leftMargin + 44;
+          }
+        }
+      } else {
+        if (!rightLimitReached) {
+          if (rightMargin > 950) {
+            console.log("we need to go down");
+            rightLimitReached = true;
+            setTileBoardVerticalPosition(
+              leftMargin,
+              rightMargin,
+              tile,
+              pos,
+              table
+            );
+          } else {
+            tile.leftPos = rightMargin;
+            rightMargin = rightMargin + 44;
+          }
+        } else {
+          if (rightMargin > 950) {
+            //we need to play this horizontally no matter what
+            tile.topPos = newRightTop === 379 ? 379 : 358;
+            rightMargin = rightMargin - 86;
+            tile.leftPos = rightMargin;
+            let aux = tile.image.split("");
+            tile.image = aux[1] + aux[0] + "h";
+            tile.position = "horizontal";
+          } else {
+            tile.topPos = newRightTop === 379 ? 357 : 336;
+            rightMargin = rightMargin - 43;
+            tile.leftPos = rightMargin;
+            let aux = tile.image.split("");
+            tile.image = aux[1] + aux[0];
+          }
+        }
+      }
+    }
+  } else {
+    //we know is not a double, so we check first if it's first tile
+    tile.topPos = 228;
+    if (tile.isStartingTile) {
+      leftMargin = leftMargin - 43;
+      tile.leftPos = leftMargin;
+      rightMargin = rightMargin + 43;
+      tile.position = "horizontal";
+    } else {
+      //we need to know if we are playing in the right or the left of the board (check pos value)
+      if (pos === "left") {
+        if (!leftLimitReached) {
+          if (leftMargin < 100) {
+            console.log("we need to go down");
+            leftLimitReached = true;
+            console.log("before:", newLeftTop);
+            setTileBoardVerticalPosition(
+              leftMargin,
+              rightMargin,
+              tile,
+              pos,
+              table
+            );
+            console.log("after:", newLeftTop);
+          } else {
+            //we play on the left
+            leftMargin = leftMargin - 86;
+            tile.leftPos = leftMargin;
+            tile.position = "horizontal";
+          }
+        } else {
+          if (leftMargin < 100) {
+            //is the first tile, so needs to be horizontal no matter what
+            tile.topPos = newLeftTop === 121 ? 77 : 98;
+            tile.leftPos = leftMargin;
+            leftMargin = leftMargin + 86;
+            let aux = tile.image.split("");
+            tile.image = aux[1] + aux[0];
+            tile.position = "horizontal";
+          } else {
+            //we play normal tile in the opposite direction
+            tile.topPos = newLeftTop === 121 ? 77 : 98;
+            tile.leftPos = leftMargin;
+            leftMargin = leftMargin + 86;
+            let aux = tile.image.split("");
+            tile.image = aux[1] + aux[0];
+            tile.position = "horizontal";
+          }
+        }
+      } else {
+        if (!rightLimitReached) {
+          if (rightMargin > 950) {
+            console.log("we need to go up");
+            rightLimitReached = true;
+            setTileBoardVerticalPosition(
+              leftMargin,
+              rightMargin,
+              tile,
+              pos,
+              table
+            );
+          } else {
+            tile.leftPos = rightMargin;
+            rightMargin = rightMargin + 86;
+            tile.position = "horizontal";
+          }
+        } else {
+          if (rightMargin > 950) {
+            //we need to play this horizontally no matter what
+            tile.topPos = newRightTop === 379 ? 379 : 358;
+            rightMargin = rightMargin - 86;
+            tile.leftPos = rightMargin;
+            let aux = tile.image.split("");
+            tile.image = aux[1] + aux[0];
+            tile.position = "horizontal";
+          } else {
+            tile.topPos = newRightTop === 379 ? 379 : 358;
+            rightMargin = rightMargin - 86;
+            tile.leftPos = rightMargin;
+            let aux = tile.image.split("");
+            tile.image = aux[1] + aux[0];
+            tile.position = "horizontal";
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    tile: tile,
+    leftMargin: leftMargin,
+    rightMargin: rightMargin,
+  };
+}
+
+export function setTileBoardVerticalPosition(
+  leftMargin,
+  rightMargin,
+  tile,
+  pos,
+  table
+) {
+  //we need to know if we are playing in the right or the left of the board (check pos value)
+  if (pos === "left") {
+    //we play on the left we go up
+    if (table[0].leftValue === table[0].rightValue) {
+      //tile we are going to attach is a double, values will be different
+      tile.topPos = 207 - 86;
+      newLeftTop = 207 - 86;
+      tile.leftPos = leftMargin;
+      tile.image =
+        tile.leftValue === tile.rightValue ? tile.image : tile.image + "v";
+      tile.position = "vertical";
+    } else {
+      tile.topPos = 228 - 86;
+      newLeftTop = 228 - 86;
+      tile.leftPos = leftMargin;
+      tile.image =
+        tile.leftValue === tile.rightValue ? tile.image : tile.image + "v";
+      tile.position = "vertical";
+    }
+  } else {
+    if (
+      table[table.length - 1].leftValue === table[table.length - 1].rightValue
+    ) {
+      tile.topPos = 207 + 86;
+      newRightTop = tile.topPos + 86;
+      rightMargin = rightMargin - 44;
+      tile.leftPos = rightMargin;
+      tile.image =
+        tile.leftValue === tile.rightValue ? tile.image : tile.image + "v";
+      tile.position = "vertical";
+    } else {
+      tile.topPos = 228 + 44;
+      newRightTop = tile.topPos + 86;
+      rightMargin = rightMargin - 44;
+      tile.leftPos = rightMargin;
+      tile.image =
+        tile.leftValue === tile.rightValue ? tile.image : tile.image + "v";
+      tile.position = "vertical";
+    }
+  }
+
+  return {
+    tile: tile,
+    leftMargin: leftMargin,
+    rightMargin: rightMargin,
+  };
 }

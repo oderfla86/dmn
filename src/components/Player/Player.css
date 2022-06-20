@@ -2,14 +2,12 @@
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
     width: 700px;
-    height: 120px;
+    height: 115px;
     position: absolute;
-    left: 50%;
-    top: 92%;
-    transform: translate(-50%, -50%);
+    left: 25%;
+    top: 82%;
 }
 .player1 {
-    background-color: transparent;
     width: 470px;
     height: 95px;
     top: 10%;
@@ -30,17 +28,16 @@
     width: 70px;
     height: 30px;
     position: absolute;
-    right: 15px;
+    right: 40px;
     top: 35%;
     line-height: 30px;
     transition: all 1s;
 }
 .player1_isHand {
-    height: 20px;
-    width: 20px;
+    height: 30px;
+    width: 30px;
     background: #FFA200;
     border-radius: 50%;
-    display: inline-block;
     top: 35%;
     left: 5%;
     position: absolute;
@@ -49,25 +46,25 @@
 .player2_container {
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
-    width: 700px;
+    width: 500px;
     height: 120px;
     position: absolute;
-    left: 96%;
-    top: 50%;
+    left: 94%;
+    top: 48%;
     transform: translate(-50%, -50%) rotate(90deg);
 }
 .player2 {
     background-color: transparent;
-    width: 500px;
+    width: 406px;
     height: 100px;
     position: absolute;
-    left: 20%;
+    left: 10%;
     top: 13%;
 }
 .player_tile{
-    width: 48px;
-    height: 90px;
-    margin-right: 10px;
+    width: 40px;
+    height: 82px;
+    margin-right: 17px;
 }
 .player2_blocked {
     background-color: #36454F;
@@ -78,7 +75,7 @@
     height: 30px;
     position: absolute;
     top: 50%;
-    left: 90%;
+    left: 94%;
     transform: translate(-50%, -50%) rotate(270deg);
     line-height: 30px;
     transition: all 1s;
@@ -89,29 +86,27 @@
     background: #FFA200;
     border-radius: 50%;
     display: inline-block;
-    left: 10%;
-    top: 37%;
+    left: 4%;
+    top: 40%;
     position: absolute;
 }
 /* ======================================================= */
 .player3_container {
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
-    width: 700px;
-    height: 120px;
+    width: 550px;
+    height: 100px;
     position: absolute;
-    left: 50%;
-    top: 7%;
-    transform: translate(-50%, -50%);
+    left: 30%;
+    top: 2%;
 }
 .player3 {
     background-color: transparent;
-    width: 500px;
+    width: 406px;
     height: 100px;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 12%;
+    top: 8%;
 }
 .player3_blocked {
     background-color: #36454F;
@@ -121,9 +116,8 @@
     width: 70px;
     height: 30px;
     position: absolute;
-    left: 90%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 85%;
+    top: 33%;
     line-height: 30px;
     transition: all 1s;
 }
@@ -132,20 +126,19 @@
     width: 20px;
     background: #FFA200;
     border-radius: 50%;
-    display: inline-block;
-    top: 35%;
-    left: 8%;
+    top: 38%;
+    left: 6%;
     position: absolute;
 }
 /* ======================================================= */
 .player4_container {
     background-color: rgba(0, 0, 0, 0.117);
     border-radius: 10px;
-    width: 700px;
+    width: 500px;
     height: 120px;
     position: absolute;
-    left: 4%;
-    top: 50%;
+    left: 6%;
+    top: 48%;
     transform: translate(-50%, -50%) rotate(90deg);
 }
 .player4 {
@@ -153,7 +146,7 @@
     width: 500px;
     height: 100px;
     position: absolute;
-    left: 20%;
+    left: 10%;
     top: 13%;
 }
 .player4_blocked {
@@ -164,7 +157,7 @@
     width: 70px;
     height: 30px;
     position: absolute;
-    left: 90%;
+    left: 94%;
     top: 50%;
     transform: translate(-50%, -50%) rotate(270deg);
     line-height: 30px;
@@ -176,7 +169,7 @@
     background: #FFA200;
     border-radius: 50%;
     display: inline-block;
-    top: 35%;
-    left: 10%;
+    top: 38%;
+    left: 4%;
     position: absolute;
 }

@@ -1,110 +1,87 @@
-import "../Player/Player.css";
 function Board(props) {
   const images = require.context("../../resources", true);
   return (
     <div
       style={{
         backgroundColor: "#36454F",
-        width: "85%",
-        height: "70%",
+        width: "1100px",
+        height: "500px",
         position: "absolute",
         borderRadius: "10px",
-        left: "50%",
-        top: "48%",
-        transform: "translate(-50%, -50%)",
+        left: "12%",
+        top: "17%",
         textAlign: "center",
       }}
     >
       <div
         style={{
-          top: "50%",
+          width: "100%",
+          height: "100%",
           left: "0",
           right: "0",
-          position: "fixed",
-          marginRight: "auto",
-          marginLeft: "auto",
+          position: "relative",
         }}
       >
         {props.table.map(function (table_tile) {
           {
-            return table_tile.leftValue !== table_tile.rightValue ? (
-              table_tile.leftValue < 0 ? (
-                <button
-                  onClick={
-                    table_tile.leftValue < 0
-                      ? () => props.boardTilePressed(table_tile)
-                      : null
-                  }
-                  disabled={!table_tile.enabled}
-                  style={{
-                    width: "55px",
-                    height: "35px",
-                    borderColor: "black",
-                    position: "relative",
-                    top: "-17px",
-                  }}
-                  key={table_tile.name}
-                >
-                  select
-                </button>
-              ) : (
-                <button
-                  style={{
-                    borderColor: table_tile.isStartingTile
-                      ? "#FFA200"
-                      : "black",
-                    background: "transparent",
-                    padding: "0",
-                    width: "55px",
-                    height: "35px",
-                    position: "relative",
-                    top: "-7px",
-                  }}
-                  disabled={!table_tile.enabled}
-                  key={table_tile.name}
-                >
-                  <img
-                    width={"50px"}
-                    height={"30px"}
-                    disabled={!table_tile.enabled}
-                    src={images(`./${table_tile.image}.png`)}
-                  />
-                </button>
-              )
-            ) : table_tile.leftValue < 0 ? (
+            return table_tile.position === "vertical" ? (
               <button
                 onClick={
-                  table_tile.leftValue < 0
+                  table_tile.isValidLeaf
                     ? () => props.boardTilePressed(table_tile)
                     : null
                 }
-                disabled={!table_tile.enabled}
                 style={{
-                  width: "55px",
-                  height: "35px",
-                  borderColor: "black",
-                  position: "relative",
-                  top: "-17px",
-                }}
-                key={table_tile.name}
-              >
-                select
-              </button>
-            ) : (
-              <button
-                style={{
-                  borderColor: table_tile.isStartingTile ? "#FFA200" : "black",
+                  borderColor: table_tile.isValidLeaf
+                    ? "#90ee90"
+                    : table_tile.isStartingTile
+                    ? "#FFA200"
+                    : "black",
                   background: "transparent",
                   padding: "0",
-                  width: "35px",
-                  height: "55px",
+                  top: `${table_tile.topPos}px`,
+                  left: `${table_tile.leftPos}px`,
+                  width: "44px",
+                  height: "86px",
+                  position: "absolute",
                 }}
                 disabled={!table_tile.enabled}
                 key={table_tile.name}
               >
                 <img
-                  width={"30px"}
-                  height={"50px"}
+                  width={"40px"}
+                  height={"82px"}
+                  disabled={!table_tile.enabled}
+                  src={images(`./${table_tile.image}.png`)}
+                />
+              </button>
+            ) : (
+              <button
+                onClick={
+                  table_tile.isValidLeaf
+                    ? () => props.boardTilePressed(table_tile)
+                    : null
+                }
+                style={{
+                  borderColor: table_tile.isValidLeaf
+                    ? "#90ee90"
+                    : table_tile.isStartingTile
+                    ? "#FFA200"
+                    : "black",
+                  background: "transparent",
+                  position: "absolute",
+                  padding: "0",
+                  top: `${table_tile.topPos}px`,
+                  left: `${table_tile.leftPos}px`,
+                  width: "86px",
+                  height: "44px",
+                }}
+                disabled={!table_tile.enabled}
+                key={table_tile.name}
+              >
+                <img
+                  width={"82px"}
+                  height={"40px"}
                   disabled={!table_tile.enabled}
                   src={images(`./${table_tile.image}.png`)}
                 />

@@ -10,11 +10,16 @@ function Player(props) {
             return (
               <button
                 style={{
-                  background: player_tile.isSelected
+                  borderColor: player_tile.isSelected
                     ? "#90ee90"
-                    : "transparent",
-                  border: "transparent",
-                  marginRight: "5px",
+                    : player_tile.isStartingTile
+                    ? "#FFA200"
+                    : "black",
+                  background: "transparent",
+                  padding: "0",
+                  width: "52px",
+                  height: "94px",
+                  marginRight: "15px",
                 }}
                 onClick={() => props.playerPlaysTile(player_tile)}
                 disabled={!player_tile.enabled}
@@ -68,8 +73,8 @@ function Player(props) {
                   key={player_tile.name}
                 >
                   <img
-                    width={"48px"}
-                    height={"90px"}
+                    width={"40px"}
+                    height={"82px"}
                     disabled={!player_tile.enabled}
                     src={
                       player_tile.leftValue === player_tile.rightValue
@@ -80,9 +85,6 @@ function Player(props) {
                 </button>
               );
             })}
-          </div>
-          <div className={`${props.blockedClass}`} style={props.blockedStyle}>
-            Blocked
           </div>
           <span
             className={`${props.handClass}`}
