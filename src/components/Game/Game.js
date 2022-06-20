@@ -421,8 +421,6 @@ function Game(props) {
             visibility: isHand === 2 ? "visible" : "hidden",
           }}
         />
-
-        {/*<Score team1Points={team1Points} team2Points={team2Points} />
         <Player
           container={"player4_container"}
           style={"player4"}
@@ -440,7 +438,8 @@ function Game(props) {
           isHandStyle={{
             visibility: isHand === 3 ? "visible" : "hidden",
           }}
-        />*/}
+        />
+        {/*<Score team1Points={team1Points} team2Points={team2Points} />*/}
       </div>
     </div>
   );
