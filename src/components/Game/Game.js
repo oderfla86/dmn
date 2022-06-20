@@ -346,79 +346,98 @@ function Game(props) {
   }
 
   return (
-    <div>
+    <div
+      style={{
+        background: "#580174",
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        top: "0",
+        bottom: "0",
+        left: "0",
+        right: "0",
+        margin: "auto",
+        display: "flex",
+      }}
+    >
       <div
         style={{
           background: "#7393B3",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
+          width: "1400px",
+          height: "750px",
+          top: "0",
+          bottom: "0",
+          left: "0",
+          right: "0",
+          margin: "auto",
+          borderRadius: "10px",
         }}
-      />
-      <Score team1Points={team1Points} team2Points={team2Points} />
-      <Player
-        isPlayer={true}
-        hand={player1}
-        playerPlaysTile={playerPlaysTile}
-        isGameOver={isGameOver}
-        isPlayerBlocked={isPlayer1Blocked}
-        isHand={isHand}
-      />
-      <Player
-        container={"player2_container"}
-        style={"player2"}
-        isPlayer={false}
-        hand={player2}
-        isGameOver={isGameOver}
-        isPlayerBlocked={isPlayer2Blocked}
-        tileStyle={"player_tile"}
-        blockedClass={"player2_blocked"}
-        blockedStyle={{
-          opacity: isPlayer2Blocked ? "1" : "0",
-          visibility: isPlayer2Blocked ? "visible" : "hidden",
-        }}
-        handClass={"player2_isHand"}
-        isHandStyle={{
-          visibility: isHand === 1 ? "visible" : "hidden",
-        }}
-      />
-      <Player
-        container={"player3_container"}
-        style={"player3"}
-        isPlayer={false}
-        hand={player3}
-        isGameOver={isGameOver}
-        isPlayerBlocked={isPlayer3Blocked}
-        tileStyle={"player_tile"}
-        blockedClass={"player3_blocked"}
-        blockedStyle={{
-          opacity: isPlayer3Blocked ? "1" : "0",
-          visibility: isPlayer3Blocked ? "visible" : "hidden",
-        }}
-        handClass={"player3_isHand"}
-        isHandStyle={{
-          visibility: isHand === 2 ? "visible" : "hidden",
-        }}
-      />
-      <Player
-        container={"player4_container"}
-        style={"player4"}
-        isPlayer={false}
-        hand={player4}
-        isGameOver={isGameOver}
-        isPlayerBlocked={isPlayer4Blocked}
-        tileStyle={"player_tile"}
-        blockedClass={"player4_blocked"}
-        blockedStyle={{
-          opacity: isPlayer4Blocked ? "1" : "0",
-          visibility: isPlayer4Blocked ? "visible" : "hidden",
-        }}
-        handClass={"player4_isHand"}
-        isHandStyle={{
-          visibility: isHand === 3 ? "visible" : "hidden",
-        }}
-      />
-      <Board table={table} boardTilePressed={boardTilePressed} />
+      >
+        <Score team1Points={team1Points} team2Points={team2Points} />
+        <Player
+          isPlayer={true}
+          hand={player1}
+          playerPlaysTile={playerPlaysTile}
+          isGameOver={isGameOver}
+          isPlayerBlocked={isPlayer1Blocked}
+          isHand={isHand}
+        />
+        <Player
+          container={"player2_container"}
+          style={"player2"}
+          isPlayer={false}
+          hand={player2}
+          isGameOver={isGameOver}
+          isPlayerBlocked={isPlayer2Blocked}
+          tileStyle={"player_tile"}
+          blockedClass={"player2_blocked"}
+          blockedStyle={{
+            opacity: isPlayer2Blocked ? "1" : "0",
+            visibility: isPlayer2Blocked ? "visible" : "hidden",
+          }}
+          handClass={"player2_isHand"}
+          isHandStyle={{
+            visibility: isHand === 1 ? "visible" : "hidden",
+          }}
+        />
+        <Player
+          container={"player3_container"}
+          style={"player3"}
+          isPlayer={false}
+          hand={player3}
+          isGameOver={isGameOver}
+          isPlayerBlocked={isPlayer3Blocked}
+          tileStyle={"player_tile"}
+          blockedClass={"player3_blocked"}
+          blockedStyle={{
+            opacity: isPlayer3Blocked ? "1" : "0",
+            visibility: isPlayer3Blocked ? "visible" : "hidden",
+          }}
+          handClass={"player3_isHand"}
+          isHandStyle={{
+            visibility: isHand === 2 ? "visible" : "hidden",
+          }}
+        />
+        <Player
+          container={"player4_container"}
+          style={"player4"}
+          isPlayer={false}
+          hand={player4}
+          isGameOver={isGameOver}
+          isPlayerBlocked={isPlayer4Blocked}
+          tileStyle={"player_tile"}
+          blockedClass={"player4_blocked"}
+          blockedStyle={{
+            opacity: isPlayer4Blocked ? "1" : "0",
+            visibility: isPlayer4Blocked ? "visible" : "hidden",
+          }}
+          handClass={"player4_isHand"}
+          isHandStyle={{
+            visibility: isHand === 3 ? "visible" : "hidden",
+          }}
+        />
+        <Board table={table} boardTilePressed={boardTilePressed} />
+      </div>
     </div>
   );
 }

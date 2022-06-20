@@ -9,8 +9,8 @@ function Score(props) {
         color: "white",
         width: "145px",
         height: "80px",
-        left: "78%",
-        top: "2%",
+        right: "165px",
+        marginTop: "5px",
       }}
     >
       <div>Scoreboard</div>

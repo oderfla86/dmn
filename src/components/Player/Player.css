@@ -98,7 +98,7 @@
     height: 100px;
     position: absolute;
     left: 30%;
-    top: 2%;
+    margin-top: 5px;
 }
 .player3 {
     background-color: transparent;
