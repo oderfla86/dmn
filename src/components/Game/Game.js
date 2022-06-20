@@ -376,7 +376,7 @@ function Game(props) {
           alignItems: "center",
         }}
       >
-        {/*<Score team1Points={team1Points} team2Points={team2Points} />
+        <Board table={table} boardTilePressed={boardTilePressed} />
         <Player
           isPlayer={true}
           hand={player1}
@@ -385,7 +385,16 @@ function Game(props) {
           isPlayerBlocked={isPlayer1Blocked}
           isHand={isHand}
         />
+        {/*<Score team1Points={team1Points} team2Points={team2Points} />/*}
         <Player
+          isPlayer={true}
+          hand={player1}
+          playerPlaysTile={playerPlaysTile}
+          isGameOver={isGameOver}
+          isPlayerBlocked={isPlayer1Blocked}
+          isHand={isHand}
+        />
+        {/*<Player
           container={"player2_container"}
           style={"player2"}
           isPlayer={false}
@@ -439,7 +448,6 @@ function Game(props) {
             visibility: isHand === 3 ? "visible" : "hidden",
           }}
         />*/}
-        <Board table={table} boardTilePressed={boardTilePressed} />
       </div>
     </div>
   );
