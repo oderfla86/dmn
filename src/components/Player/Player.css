@@ -3,8 +3,9 @@
     border-radius: 10px;
     width: 700px;
     height: 115px;
-    position: absolute;
-    top: 82%;
+    display: flex;
+    align-self: flex-end;
+    margin-bottom: 5px;
 }
 .player1 {
     width: 470px;
