@@ -7,11 +7,10 @@ function Score(props) {
         borderRadius: "5px",
         position: "absolute",
         color: "white",
-        width: "152px",
+        width: "145px",
         height: "80px",
-        left: "87%",
-        top: "6%",
-        transform: "translate(-50%, -50%)",
+        left: "78%",
+        top: "2%",
       }}
     >
       <div>Scoreboard</div>
@@ -23,7 +22,7 @@ function Score(props) {
           position: "absolute",
         }}
       >
-        v0.2.3
+        v1.0.0
       </div>
       <hr />
       <div>TEAM 1 - {props.team1Points}</div>

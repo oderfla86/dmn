@@ -13,6 +13,7 @@ import {
   calculatePointsForWinners,
   calculateBlockedGameWinner,
   getStsartingPlayer,
+  setTileBoardPosition,
 } from "../../Util";
 
 function Game(props) {
@@ -23,6 +24,8 @@ function Game(props) {
   let gameBlocked = useRef(0);
   let gameOver = useRef(false);
   let selectedTile = useRef(null);
+  let leftMargin = useRef(550);
+  let rightMargin = useRef(550);
   let totalRounds = useRef(props.data.rounds ? props.data.rounds : 0);
   let team1 = useRef(props.data.team1Points ? props.data.team1Points : 0);
   let team2 = useRef(props.data.team2Points ? props.data.team2Points : 0);
@@ -50,6 +53,7 @@ function Game(props) {
     console.info("hand 3:", props.data.player3);
     console.info("hand 4:", props.data.player4);
     console.log("Getting starting player:", startingPlayer.current);
+
     if (startingPlayer.current < 0) {
       startingPlayer.current = getStsartingPlayer(
         player1,
@@ -93,7 +97,8 @@ function Game(props) {
 
   async function prepareNextRound() {
     await timeout(ROUND_DELAY);
-    debugger;
+    leftMargin.current = 550;
+    rightMargin.current = 550;
     if (team1.current >= 100 || team2.current >= 100) {
       console.info("GAME IS FINISHED");
       console.info("TEAM 1:", team1.current);
@@ -121,8 +126,6 @@ function Game(props) {
   }
 
   async function boardTilePressed(tile) {
-    //leftValue -1 left side clicked
-    //leftValue -2 right side clicked
     gameBlocked.current = 0;
     console.log("Player 0 played:", selectedTile.current.id);
     let updatedPlayStatus = placePlayerTile(
@@ -130,7 +133,9 @@ function Game(props) {
       leftLeaf.current,
       rightLeaf.current,
       table,
-      tile.leftValue === -1 ? true : false
+      tile.id === table[0].id ? true : false,
+      leftMargin.current,
+      rightMargin.current
     );
     leftLeaf.current =
       updatedPlayStatus.tile.leftLeaf !== null
@@ -142,6 +147,8 @@ function Game(props) {
         : rightLeaf.current;
     let tileIndex = getTileHandIndex(selectedTile.current);
     player1.splice(tileIndex, 1);
+    leftMargin.current = updatedPlayStatus.leftMargin;
+    rightMargin.current = updatedPlayStatus.rightMargin;
     setTable([...updatedPlayStatus.table]);
     setPlayer1([...disablePlayerHand(player1)]);
     if (player1.length === 0) {
@@ -161,9 +168,17 @@ function Game(props) {
     if (table.length === 0) {
       player1.splice(tileIndex, 1);
       tile.isStartingTile = true;
+      tile.isLeaf = true;
       leftLeaf.current = tile.leftValue;
       rightLeaf.current = tile.rightValue;
-      table.push(tile);
+      let updatedTile = setTileBoardPosition(
+        leftMargin.current,
+        rightMargin.current,
+        tile
+      );
+      table.push(updatedTile.tile);
+      leftMargin.current = updatedTile.leftMargin;
+      rightMargin.current = updatedTile.rightMargin;
       setTable([...table]);
       setPlayer1([...disablePlayerHand(player1)]);
       simulateOtherPlayersTurn(1);
@@ -203,12 +218,16 @@ function Game(props) {
         leftLeaf.current,
         rightLeaf.current,
         table,
-        totalRounds.current
+        totalRounds.current,
+        leftMargin.current,
+        rightMargin.current
       );
       if (!simulationTurn.blocked) {
         //player is not blocked, they play a tile
         console.info("Player " + turn + " played: " + simulationTurn.tile.id);
         gameBlocked.current = 0;
+        leftMargin.current = simulationTurn.leftMargin;
+        rightMargin.current = simulationTurn.rightMargin;
         leftLeaf.current =
           simulationTurn.tile.leftLeaf !== null
             ? simulationTurn.tile.leftLeaf
@@ -218,7 +237,6 @@ function Game(props) {
             ? simulationTurn.tile.rightLeaf
             : rightLeaf.current;
         setTable([...simulationTurn.table]);
-        console.log(simulationTurn.table);
         updateHandData(turn, simulationTurn.hand);
         if (simulationTurn.hand.length === 0) {
           console.log("Rounds is over");
@@ -332,12 +350,8 @@ function Game(props) {
       <div
         style={{
           background: "#7393B3",
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
+          width: "1440px",
+          height: "800px",
         }}
       />
       <Score team1Points={team1Points} team2Points={team2Points} />
