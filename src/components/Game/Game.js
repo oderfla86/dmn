@@ -350,8 +350,9 @@ function Game(props) {
       <div
         style={{
           background: "#7393B3",
-          width: "1440px",
-          height: "800px",
+          width: "100%",
+          height: "100%",
+          position: "absolute",
         }}
       />
       <Score team1Points={team1Points} team2Points={team2Points} />
