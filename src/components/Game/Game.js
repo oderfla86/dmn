@@ -385,33 +385,6 @@ function Game(props) {
           isPlayerBlocked={isPlayer1Blocked}
           isHand={isHand}
         />
-        {/*<Score team1Points={team1Points} team2Points={team2Points} />/*}
-        <Player
-          isPlayer={true}
-          hand={player1}
-          playerPlaysTile={playerPlaysTile}
-          isGameOver={isGameOver}
-          isPlayerBlocked={isPlayer1Blocked}
-          isHand={isHand}
-        />
-        {/*<Player
-          container={"player2_container"}
-          style={"player2"}
-          isPlayer={false}
-          hand={player2}
-          isGameOver={isGameOver}
-          isPlayerBlocked={isPlayer2Blocked}
-          tileStyle={"player_tile"}
-          blockedClass={"player2_blocked"}
-          blockedStyle={{
-            opacity: isPlayer2Blocked ? "1" : "0",
-            visibility: isPlayer2Blocked ? "visible" : "hidden",
-          }}
-          handClass={"player2_isHand"}
-          isHandStyle={{
-            visibility: isHand === 1 ? "visible" : "hidden",
-          }}
-        />
         <Player
           container={"player3_container"}
           style={"player3"}
@@ -428,6 +401,25 @@ function Game(props) {
           handClass={"player3_isHand"}
           isHandStyle={{
             visibility: isHand === 2 ? "visible" : "hidden",
+          }}
+        />
+        {/*<Score team1Points={team1Points} team2Points={team2Points} />
+        <Player
+          container={"player2_container"}
+          style={"player2"}
+          isPlayer={false}
+          hand={player2}
+          isGameOver={isGameOver}
+          isPlayerBlocked={isPlayer2Blocked}
+          tileStyle={"player_tile"}
+          blockedClass={"player2_blocked"}
+          blockedStyle={{
+            opacity: isPlayer2Blocked ? "1" : "0",
+            visibility: isPlayer2Blocked ? "visible" : "hidden",
+          }}
+          handClass={"player2_isHand"}
+          isHandStyle={{
+            visibility: isHand === 1 ? "visible" : "hidden",
           }}
         />
         <Player
