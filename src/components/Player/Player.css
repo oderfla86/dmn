@@ -49,9 +49,7 @@
     width: 500px;
     height: 120px;
     position: absolute;
-    left: 94%;
-    top: 48%;
-    transform: translate(-50%, -50%) rotate(90deg);
+    transform: rotate(90deg) translate(0, -620px);
 }
 .player2 {
     background-color: transparent;

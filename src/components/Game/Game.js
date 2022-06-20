@@ -386,25 +386,6 @@ function Game(props) {
           isHand={isHand}
         />
         <Player
-          container={"player3_container"}
-          style={"player3"}
-          isPlayer={false}
-          hand={player3}
-          isGameOver={isGameOver}
-          isPlayerBlocked={isPlayer3Blocked}
-          tileStyle={"player_tile"}
-          blockedClass={"player3_blocked"}
-          blockedStyle={{
-            opacity: isPlayer3Blocked ? "1" : "0",
-            visibility: isPlayer3Blocked ? "visible" : "hidden",
-          }}
-          handClass={"player3_isHand"}
-          isHandStyle={{
-            visibility: isHand === 2 ? "visible" : "hidden",
-          }}
-        />
-        {/*<Score team1Points={team1Points} team2Points={team2Points} />
-        <Player
           container={"player2_container"}
           style={"player2"}
           isPlayer={false}
@@ -422,6 +403,26 @@ function Game(props) {
             visibility: isHand === 1 ? "visible" : "hidden",
           }}
         />
+        <Player
+          container={"player3_container"}
+          style={"player3"}
+          isPlayer={false}
+          hand={player3}
+          isGameOver={isGameOver}
+          isPlayerBlocked={isPlayer3Blocked}
+          tileStyle={"player_tile"}
+          blockedClass={"player3_blocked"}
+          blockedStyle={{
+            opacity: isPlayer3Blocked ? "1" : "0",
+            visibility: isPlayer3Blocked ? "visible" : "hidden",
+          }}
+          handClass={"player3_isHand"}
+          isHandStyle={{
+            visibility: isHand === 2 ? "visible" : "hidden",
+          }}
+        />
+
+        {/*<Score team1Points={team1Points} team2Points={team2Points} />
         <Player
           container={"player4_container"}
           style={"player4"}
