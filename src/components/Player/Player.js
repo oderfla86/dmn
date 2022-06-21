@@ -4,17 +4,19 @@ function Player(props) {
   const images = require.context("../../resources", true);
   if (props.isPlayer) {
     return (
-      <div className="player1_container">
+      <div
+        className="player1_container"
+        style={{
+          borderColor: props.isMyTurn ? "coral" : null,
+          borderStyle: props.isMyTurn ? "solid" : null,
+        }}
+      >
         <div className="player1">
           {props.hand.map(function (player_tile) {
             return (
               <button
                 style={{
-                  borderColor: player_tile.isSelected
-                    ? "#90ee90"
-                    : player_tile.isStartingTile
-                    ? "#FFA200"
-                    : "black",
+                  borderColor: player_tile.isSelected ? "#90ee90" : "black",
                   background: "transparent",
                   padding: "0",
                   width: "52px",
@@ -59,7 +61,13 @@ function Player(props) {
   } else {
     if (props.isGameOver) {
       return (
-        <div className={`${props.container}`}>
+        <div
+          className={`${props.container}`}
+          style={{
+            borderColor: props.isMyTurn ? "coral" : null,
+            borderStyle: props.isMyTurn ? "solid" : null,
+          }}
+        >
           <div className={`${props.style}`}>
             {props.hand.map(function (player_tile) {
               return (
@@ -94,7 +102,13 @@ function Player(props) {
       );
     } else {
       return (
-        <div className={`${props.container}`}>
+        <div
+          className={`${props.container}`}
+          style={{
+            borderColor: props.isMyTurn ? "coral" : null,
+            borderStyle: props.isMyTurn ? "solid" : null,
+          }}
+        >
           <div className={`${props.style}`}>
             {props.hand.map(function (player_tile) {
               return (

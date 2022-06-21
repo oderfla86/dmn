@@ -90,21 +90,14 @@ function removePlaceholderTilesFromBoard(table) {
   table[table.length - 1].isValidLeaf = false;
 
   return table;
-  //   if (table[0].leftValue < 0) {
-  //     table.splice(0, 1);
-  //   }
-
-  //   if (table[table.length - 1].leftValue < 0) {
-  //     table.splice(table.length - 1, 1);
-  //   }
-
-  //   return table;
 }
 
 function getHandTotalPoints(hand) {
-  return hand.reduce((accumulator, tile) => {
-    return accumulator + tile.total;
-  }, 0);
+  let total = 0;
+  for (let i = 0; i < hand.length; i++) {
+    total += hand[i].total;
+  }
+  return total;
 }
 
 export function createGame() {
@@ -127,182 +120,52 @@ export function createGame() {
   return startGame();
 }
 
-export function searchTileForSimulation(
-  playerHand,
-  leftLeaf,
-  rightLeaf,
-  table,
-  totalRounds,
-  leftMargin,
-  rightMargin
-) {
-  let newTile = null;
-  let blocked = true;
-  let newLeftMargin = leftMargin;
-  let newRightMargin = rightMargin;
-  // //we need to add an extra check in here
-  if (totalRounds === 0 && table.length === 0) {
-    //we know is starting, so we can start with 6:6 or a different tile
-    newTile = playerHand.find((tile) => tile.id === "6:6");
-    if (newTile) {
-      newTile.leftLeaf = newTile.leftValue;
-      newTile.rightLeaf = newTile.rightValue;
-      newTile.isStartingTile = true;
-      playerHand = playerHand.filter((tile) => tile.id !== "6:6");
-      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
-      table.push(updatedTile.tile);
-      newLeftMargin = updatedTile.leftMargin;
-      newRightMargin = updatedTile.rightMargin;
-      blocked = false;
-    } else {
-      //player doesn't have 6:6, we pick first one
-      newTile = playerHand.shift();
-      newTile.leftLeaf = newTile.leftValue;
-      newTile.rightLeaf = newTile.rightValue;
-      newTile.isStartingTile = true;
-      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
-      table.push(updatedTile.tile);
-      newLeftMargin = updatedTile.leftMargin;
-      newRightMargin = updatedTile.rightMargin;
-      blocked = false;
-    }
-  } else if (totalRounds > 0 && table.length === 0) {
-    //we try to find a double, if not, we play the first one
-    newTile = playerHand.find((tile) => tile.leftValue === tile.rightValue);
-    if (newTile) {
-      newTile.leftLeaf = newTile.leftValue;
-      newTile.rightLeaf = newTile.rightValue;
-      newTile.isStartingTile = true;
-      playerHand = playerHand.filter((tile) => tile.id !== newTile.id);
-      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
-      table.push(updatedTile.tile);
-      newLeftMargin = updatedTile.leftMargin;
-      newRightMargin = updatedTile.rightMargin;
-      blocked = false;
-    } else {
-      newTile = playerHand.shift();
-      newTile.leftLeaf = newTile.leftValue;
-      newTile.rightLeaf = newTile.rightValue;
-      newTile.isStartingTile = true;
-      let updatedTile = setTileBoardPosition(leftMargin, rightMargin, newTile);
-      table.push(updatedTile.tile);
-      newLeftMargin = updatedTile.leftMargin;
-      newRightMargin = updatedTile.rightMargin;
-      blocked = false;
-    }
-  } else {
-    for (let i = 0; i < playerHand.length; i++) {
-      let handTile = playerHand[i];
-      if (handTile.rightValue === leftLeaf || handTile.leftValue === leftLeaf) {
-        newTile = handTile;
-        newTile.leftLeaf =
-          handTile.rightValue === leftLeaf
-            ? handTile.leftValue
-            : handTile.rightValue;
-        newTile.rightLeaf = null;
-        newTile.name =
-          handTile.rightValue === leftLeaf
-            ? handTile.leftValue + ":" + handTile.rightValue
-            : handTile.rightValue + ":" + handTile.leftValue;
-        playerHand.splice(i, 1);
-        newTile.image = newTile.name.replace(":", "");
-        //this tile will be added to the left side
-        let updatedTile = setTileBoardPosition(
-          leftMargin,
-          rightMargin,
-          newTile,
-          "left",
-          table
-        );
-        newTile = updatedTile.tile;
-        newLeftMargin = updatedTile.leftMargin;
-        newRightMargin = updatedTile.rightMargin;
-        table.unshift(newTile);
-        blocked = false;
-        break;
-      } else if (
-        handTile.rightValue === rightLeaf ||
-        handTile.leftValue === rightLeaf
-      ) {
-        newTile = handTile;
-        newTile.rightLeaf =
-          handTile.rightValue === rightLeaf
-            ? handTile.leftValue
-            : handTile.rightValue;
-        newTile.leftLeaf = null;
-        newTile.name =
-          handTile.rightValue === rightLeaf
-            ? handTile.rightValue + ":" + handTile.leftValue
-            : handTile.leftValue + ":" + handTile.rightValue;
-        newTile.image = newTile.name.replace(":", "");
-        //this tile will be added to the right side
-        let updatedTile = setTileBoardPosition(
-          leftMargin,
-          rightMargin,
-          newTile,
-          "right",
-          table
-        );
-        newTile = updatedTile.tile;
-        newLeftMargin = updatedTile.leftMargin;
-        newRightMargin = updatedTile.rightMargin;
-        playerHand.splice(i, 1);
-        table.push(newTile);
-        blocked = false;
-        break;
-      }
-    }
-  }
-  return {
-    tile: newTile,
-    hand: playerHand,
-    table: table,
-    blocked: blocked,
-    leftMargin: newLeftMargin,
-    rightMargin: newRightMargin,
-  };
-}
-
 export function tilesAvailableForPlayer(
-  playerHand,
+  player,
   leftLeaf,
   rightLeaf,
-  currentTurn
+  currentRound,
+  table
 ) {
+  let playerHand = JSON.parse(player.hand);
   let blocked = true;
   for (let i = 0; i < playerHand.length; i++) {
     playerHand[i].canPlayLeft = false;
     playerHand[i].canPlayRight = false;
-    if (currentTurn != undefined) {
-      if (currentTurn == 0) {
-        if (playerHand[i].id !== "6:6") {
-          playerHand[i].enabled = false;
-          blocked = false;
-        }
+    //this needs to be modified
+    if (currentRound === 0 && table.length === 0) {
+      if (playerHand[i].id !== "6:6") {
+        playerHand[i].enabled = false;
+        blocked = false;
       }
     } else {
-      if (
-        playerHand[i].rightValue !== leftLeaf &&
-        playerHand[i].leftValue !== leftLeaf &&
-        playerHand[i].rightValue !== rightLeaf &&
-        playerHand[i].leftValue !== rightLeaf
-      ) {
-        playerHand[i].enabled = false;
-      } else {
-        playerHand[i].enabled = true;
-        if (
-          playerHand[i].rightValue === leftLeaf ||
-          playerHand[i].leftValue === leftLeaf
-        ) {
-          playerHand[i].canPlayLeft = true;
-        }
-        if (
-          playerHand[i].rightValue === rightLeaf ||
-          playerHand[i].leftValue === rightLeaf
-        ) {
-          playerHand[i].canPlayRight = true;
-        }
+      if (table.length === 0) {
+        //player can start with any tile
         blocked = false;
+      } else {
+        if (
+          playerHand[i].rightValue !== leftLeaf &&
+          playerHand[i].leftValue !== leftLeaf &&
+          playerHand[i].rightValue !== rightLeaf &&
+          playerHand[i].leftValue !== rightLeaf
+        ) {
+          playerHand[i].enabled = false;
+        } else {
+          playerHand[i].enabled = true;
+          if (
+            playerHand[i].rightValue === leftLeaf ||
+            playerHand[i].leftValue === leftLeaf
+          ) {
+            playerHand[i].canPlayLeft = true;
+          }
+          if (
+            playerHand[i].rightValue === rightLeaf ||
+            playerHand[i].leftValue === rightLeaf
+          ) {
+            playerHand[i].canPlayRight = true;
+          }
+          blocked = false;
+        }
       }
     }
   }
@@ -400,14 +263,6 @@ export function updatePlayerSelectedTile(tile, playerHand) {
   return playerHand;
 }
 
-export function getTileHandIndex(tile, hand) {
-  for (let i = 0; i < hand.length; i++) {
-    if (hand[i].id === tile.id) {
-      return i;
-    }
-  }
-}
-
 export function createBoardPlaceholderTiles(table, tile) {
   table[0].isValidLeaf = false;
   table[table.length - 1].isValidLeaf = false;
@@ -420,23 +275,11 @@ export function createBoardPlaceholderTiles(table, tile) {
   }
 
   return table;
-  // table = removePlaceholderTilesFromBoard(table);
-  // if (tile.canPlayLeft) {
-  //   let t = new Tile(-1, -2);
-  //   table.unshift(t);
-  // }
-
-  // if (tile.canPlayRight) {
-  //   let t = new Tile(-2, -1);
-  //   table.push(t);
-  // }
-
-  // return table;
 }
 
 export function calculatePointsForWinners(hand_1, hand_2) {
-  const sum_1 = getHandTotalPoints(hand_1);
-  const sum_2 = getHandTotalPoints(hand_2);
+  const sum_1 = getHandTotalPoints(JSON.parse(hand_1.hand));
+  const sum_2 = getHandTotalPoints(JSON.parse(hand_2.hand));
 
   return sum_1 + sum_2;
 }
@@ -465,18 +308,12 @@ export function calculateBlockedGameWinner(hand_1, hand_2, hand_3, hand_4) {
   }
 }
 
-export function getStsartingPlayer(hand_1, hand_2, hand_3, hand_4) {
-  if (hand_1.find((tile) => tile.id === "6:6")) {
-    return 0;
-  }
-  if (hand_2.find((tile) => tile.id === "6:6")) {
-    return 1;
-  }
-  if (hand_3.find((tile) => tile.id === "6:6")) {
-    return 2;
-  }
-  if (hand_4.find((tile) => tile.id === "6:6")) {
-    return 3;
+export function getStsartingPlayer(listOfPlayers) {
+  for (let i = 0; i < listOfPlayers.length; i++) {
+    let hand = JSON.parse(listOfPlayers[i].hand);
+    if (hand.find((tile) => tile.id === "6:6")) {
+      return listOfPlayers[i].id;
+    }
   }
 }
 
@@ -713,4 +550,85 @@ export function setTileBoardVerticalPosition(
     leftMargin: leftMargin,
     rightMargin: rightMargin,
   };
+}
+
+export function getTotalOfValidPlayers(listOfPlayers) {
+  let users = [];
+  Object.values(listOfPlayers).forEach((val) => {
+    if (val.name !== "dummy") {
+      users.push(val);
+    }
+  });
+
+  return users;
+}
+
+export function randomisePlayersTurnOrder(listOfPlayers, gameState) {
+  let currentIndex = listOfPlayers.length,
+    randomIndex;
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [listOfPlayers[currentIndex], listOfPlayers[randomIndex]] = [
+      listOfPlayers[randomIndex],
+      listOfPlayers[currentIndex],
+    ];
+  }
+
+  for (let i = 0; i < listOfPlayers.length; i++) {
+    switch (i) {
+      case 0:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player1);
+        break;
+      case 1:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player2);
+        break;
+      case 2:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player3);
+        break;
+      case 3:
+        listOfPlayers[i].hand = JSON.stringify(gameState.player4);
+        break;
+      default:
+        console.log("Error!");
+    }
+  }
+
+  return listOfPlayers;
+}
+
+export function getLocalOrderOfPlayers(listOfPlayers, playerId) {
+  let newOrder = [];
+  const index = listOfPlayers.findIndex((player) => {
+    return player.id === playerId;
+  });
+
+  if (index !== 0) {
+    newOrder.push(listOfPlayers[index]);
+
+    for (let i = index + 1; i < listOfPlayers.length; i++) {
+      newOrder.push(listOfPlayers[i]);
+    }
+    for (let i = 0; i < index; i++) {
+      newOrder.push(listOfPlayers[i]);
+    }
+
+    return newOrder;
+  }
+
+  return listOfPlayers;
+}
+
+export function updateOriginalOrderArray(originalOrder, player, playerId) {
+  for (let i = 0; i < originalOrder.length; i++) {
+    if (originalOrder[i].id === playerId) {
+      originalOrder[i].hand = JSON.stringify(player);
+    }
+  }
+
+  return originalOrder;
 }
