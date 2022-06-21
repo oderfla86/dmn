@@ -348,7 +348,7 @@ function Game(props) {
   return (
     <div
       style={{
-        background: "#580174",
+        background: "#767676",
         position: "absolute",
         width: "100%",
         height: "100%",
