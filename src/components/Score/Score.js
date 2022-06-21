@@ -8,18 +8,15 @@ function Score(props) {
         position: "absolute",
         color: "white",
         width: "145px",
-        height: "80px",
-        right: "165px",
-        marginTop: "5px",
+        height: "90px",
+        marginTop: "-640px",
+        marginLeft: "850px",
       }}
     >
       <div>Scoreboard</div>
       <div
         style={{
           fontSize: "7px",
-          right: "5%",
-          top: "10%",
-          position: "absolute",
         }}
       >
         v1.0.0

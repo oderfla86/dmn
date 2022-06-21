@@ -3,9 +3,9 @@
     border-radius: 10px;
     width: 700px;
     height: 115px;
-    position: absolute;
-    left: 25%;
-    top: 82%;
+    display: flex;
+    align-self: flex-end;
+    margin-bottom: 5px;
 }
 .player1 {
     width: 470px;
@@ -27,9 +27,9 @@
     color: white;
     width: 70px;
     height: 30px;
-    position: absolute;
-    right: 40px;
-    top: 35%;
+    position: relative;
+    margin-top: 40px;
+    margin-left: 125px;
     line-height: 30px;
     transition: all 1s;
 }
@@ -38,8 +38,10 @@
     width: 30px;
     background: #FFA200;
     border-radius: 50%;
-    top: 35%;
-    left: 5%;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+    margin-left: 40px;
     position: absolute;
 }
 /* ======================================================= */
@@ -49,9 +51,7 @@
     width: 500px;
     height: 120px;
     position: absolute;
-    left: 94%;
-    top: 48%;
-    transform: translate(-50%, -50%) rotate(90deg);
+    transform: rotate(90deg) translate(0, -620px);
 }
 .player2 {
     background-color: transparent;
@@ -97,7 +97,8 @@
     width: 550px;
     height: 100px;
     position: absolute;
-    left: 30%;
+    display: flex;
+    align-self: flex-start;
     margin-top: 5px;
 }
 .player3 {
@@ -137,9 +138,7 @@
     width: 500px;
     height: 120px;
     position: absolute;
-    left: 6%;
-    top: 48%;
-    transform: translate(-50%, -50%) rotate(90deg);
+    transform: rotate(90deg) translate(0, 620px);
 }
 .player4 {
     background-color: transparent;

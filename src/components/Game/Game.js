@@ -348,7 +348,7 @@ function Game(props) {
   return (
     <div
       style={{
-        background: "#580174",
+        background: "#767676",
         position: "absolute",
         width: "100%",
         height: "100%",
@@ -371,9 +371,12 @@ function Game(props) {
           right: "0",
           margin: "auto",
           borderRadius: "10px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Score team1Points={team1Points} team2Points={team2Points} />
+        <Board table={table} boardTilePressed={boardTilePressed} />
         <Player
           isPlayer={true}
           hand={player1}
@@ -436,7 +439,7 @@ function Game(props) {
             visibility: isHand === 3 ? "visible" : "hidden",
           }}
         />
-        <Board table={table} boardTilePressed={boardTilePressed} />
+        <Score team1Points={team1Points} team2Points={team2Points} />
       </div>
     </div>
   );
