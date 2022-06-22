@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createGame } from "./Util";
-import GameBoard from "./components/Game/GameBoard";
+import GameBoard from "./components/Game/BoardGame";
 import Dashboard from "./components/Dashboard/Dashboard";
 import { update, ref } from "firebase/database";
 
@@ -47,6 +47,12 @@ function App() {
         rightLeaf: -1,
         isRoundOver: false,
         isGameOver: false,
+        leftMargin: 550,
+        rightMargin: 550,
+        leftLimitReached: false,
+        rightLimitReached: false,
+        newLeftTop: 0,
+        newRightTop: 0,
         startingPlayer: newStartingPlayer,
         currentTurn: newStartingPlayer,
         order: JSON.stringify(order),

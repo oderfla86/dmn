@@ -13,6 +13,7 @@ import {
   placePlayerTile,
   calculatePointsForWinners,
   calculateBlockedGameWinner,
+  setTileBoardPosition,
 } from "../../Util";
 import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, update } from "firebase/database";
@@ -48,6 +49,12 @@ function BoardGame(props) {
   let selectedTile = useRef(null);
   let leftMargin = useRef(0);
   let rightMargin = useRef(0);
+  let constraints = useRef({
+    leftLimitReached: false,
+    rightLimitReached: false,
+    newLeftTop: 0,
+    newRightTop: 0,
+  });
 
   const [table, setTable] = useState([]);
   const [player1, setP1] = useState([]);
@@ -89,6 +96,7 @@ function BoardGame(props) {
 
     onValue(gameRef.current, (snapshot) => {
       //fires whenever a change occurs in game object
+      debugger;
       let boardState = snapshot.val();
       if (boardState) {
         originalOrder.current = JSON.parse(boardState.order);
@@ -109,6 +117,10 @@ function BoardGame(props) {
 
         leftMargin.current = boardState.leftMargin;
         rightMargin.current = boardState.rightMargin;
+        constraints.current.leftLimitReached = boardState.leftLimitReached;
+        constraints.current.rightLimitReached = boardState.rightLimitReached;
+        constraints.current.newLeftTop = boardState.newLeftTop;
+        constraints.current.newRightTop = boardState.newRightTop;
 
         if (boardState.isRoundOver) {
           setIsRoundOver(true);
@@ -301,7 +313,8 @@ function BoardGame(props) {
       table,
       tile.id === table[0].id ? true : false,
       leftMargin.current,
-      rightMargin.current
+      rightMargin.current,
+      constraints.current
     );
 
     leftLeaf.current =
@@ -316,6 +329,7 @@ function BoardGame(props) {
     player1.splice(tileIndex, 1);
     leftMargin.current = updatedPlayStatus.leftMargin;
     rightMargin.current = updatedPlayStatus.rightMargin;
+    constraints.current = updatedPlayStatus.constraints;
     setTable([...updatedPlayStatus.table]);
     setP1([...disablePlayerHand(player1)]);
     if (player1.length === 0) {
@@ -365,6 +379,10 @@ function BoardGame(props) {
         order: JSON.stringify(updatedOrder),
         leftMargin: leftMargin.current,
         rightMargin: rightMargin.current,
+        leftLimitReached: constraints.current.leftLimitReached,
+        rightLimitReached: constraints.current.rightLimitReached,
+        newLeftTop: constraints.current.newLeftTop,
+        newRightTop: constraints.current.newRightTop,
         currentTurn: playersOrderLocal.current[1].id,
       });
     }
@@ -379,11 +397,15 @@ function BoardGame(props) {
       let updatedTile = setTileBoardPosition(
         leftMargin.current,
         rightMargin.current,
-        tile
+        tile,
+        null,
+        null,
+        constraints.current
       );
       table.push(updatedTile.tile);
       leftMargin.current = updatedTile.leftMargin;
       rightMargin.current = updatedTile.rightMargin;
+      constraints.current = updatedTile.constraints;
       //need to update original order
       let updatedOrder = updateOriginalOrderArray(
         originalOrder.current,
@@ -394,6 +416,12 @@ function BoardGame(props) {
       update(gameRef.current, {
         leftLeaf: tile.leftValue,
         rightLeaf: tile.rightValue,
+        leftMargin: leftMargin.current,
+        rightMargin: rightMargin.current,
+        leftLimitReached: constraints.current.leftLimitReached,
+        rightLimitReached: constraints.current.rightLimitReached,
+        newLeftTop: constraints.current.newLeftTop,
+        newRightTop: constraints.current.newRightTop,
         table: JSON.stringify(table),
         order: JSON.stringify(updatedOrder),
         currentTurn: playersOrderLocal.current[1].id,
@@ -523,7 +551,12 @@ function BoardGame(props) {
               : null
           }
         />
-        <Score team1Points={team1Points} team2Points={team2Points} />
+        <Score
+          team1Points={team1Points}
+          team2Points={team2Points}
+          team1Name={team1Name}
+          team2Name={team2Name}
+        />
       </div>
     </div>
   );

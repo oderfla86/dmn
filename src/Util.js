@@ -26,10 +26,6 @@ let player3 = [];
 let player4 = [];
 let tilePool = [];
 let table = [];
-let leftLimitReached = false;
-let rightLimitReached = false;
-let newLeftTop = 0;
-let newRightTop = 0;
 
 function startGame() {
   return {
@@ -102,10 +98,6 @@ function getHandTotalPoints(hand) {
 
 export function createGame() {
   console.log("Initialising game data");
-  newLeftTop = 0;
-  newRightTop = 0;
-  leftLimitReached = false;
-  rightLimitReached = false;
   player1 = [];
   player2 = [];
   player3 = [];
@@ -189,7 +181,8 @@ export function placePlayerTile(
   table,
   isLeftSideClicked,
   leftMargin,
-  rightMargin
+  rightMargin,
+  constraints
 ) {
   removePlaceholderTilesFromBoard(table);
   let newTile = null;
@@ -212,7 +205,8 @@ export function placePlayerTile(
       rightMargin,
       newTile,
       "left",
-      table
+      table,
+      constraints
     );
     newTile = updatedTile.tile;
     leftMargin = updatedTile.leftMargin;
@@ -236,7 +230,8 @@ export function placePlayerTile(
       rightMargin,
       newTile,
       "right",
-      table
+      table,
+      constraints
     );
     newTile = updatedTile.tile;
     leftMargin = updatedTile.leftMargin;
@@ -249,6 +244,7 @@ export function placePlayerTile(
     table: table,
     leftMargin: leftMargin,
     rightMargin: rightMargin,
+    constraints: constraints,
   };
 }
 
@@ -322,8 +318,10 @@ export function setTileBoardPosition(
   rightMargin,
   tile,
   pos,
-  table
+  table,
+  constraints
 ) {
+  //add new constraints object to the logic
   if (tile.leftValue === tile.rightValue) {
     //we know is a double so we fixate the height
     tile.topPos = 207;
@@ -335,18 +333,17 @@ export function setTileBoardPosition(
     } else {
       //we need to know if we are playing in the right or the left of the board (check pos value)
       if (pos === "left") {
-        if (!leftLimitReached) {
+        if (!constraints.leftLimitReached) {
           if (leftMargin < 100) {
-            console.log("we need to go up");
-            leftLimitReached = true;
+            constraints.leftLimitReached = true;
             setTileBoardVerticalPosition(
               leftMargin,
               rightMargin,
               tile,
               pos,
-              table
+              table,
+              constraints
             );
-            console.log("after:", newLeftTop);
           } else {
             //we play on the left
             leftMargin = leftMargin - 44;
@@ -355,29 +352,30 @@ export function setTileBoardPosition(
         } else {
           if (leftMargin < 100) {
             //is the first tile, so needs to be horizontal no matter what
-            tile.topPos = newLeftTop === 121 ? 77 : 98;
+            tile.topPos = constraints.newLeftTop === 121 ? 77 : 98;
             tile.leftPos = leftMargin;
             leftMargin = leftMargin + 86;
             tile.image = tile.image + "h";
             tile.position = "horizontal";
           } else {
             //we play normal tile in the opposite direction
-            tile.topPos = newLeftTop === 121 ? 56 : 77;
+            tile.topPos = constraints.newLeftTop === 121 ? 56 : 77;
             tile.leftPos = leftMargin;
             leftMargin = leftMargin + 44;
           }
         }
       } else {
-        if (!rightLimitReached) {
+        if (!constraints.rightLimitReached) {
           if (rightMargin > 950) {
             console.log("we need to go down");
-            rightLimitReached = true;
+            constraints.rightLimitReached = true;
             setTileBoardVerticalPosition(
               leftMargin,
               rightMargin,
               tile,
               pos,
-              table
+              table,
+              constraints
             );
           } else {
             tile.leftPos = rightMargin;
@@ -386,14 +384,14 @@ export function setTileBoardPosition(
         } else {
           if (rightMargin > 950) {
             //we need to play this horizontally no matter what
-            tile.topPos = newRightTop === 379 ? 379 : 358;
+            tile.topPos = constraints.newRightTop === 379 ? 379 : 358;
             rightMargin = rightMargin - 86;
             tile.leftPos = rightMargin;
             let aux = tile.image.split("");
             tile.image = aux[1] + aux[0] + "h";
             tile.position = "horizontal";
           } else {
-            tile.topPos = newRightTop === 379 ? 357 : 336;
+            tile.topPos = constraints.newRightTop === 379 ? 357 : 336;
             rightMargin = rightMargin - 43;
             tile.leftPos = rightMargin;
             let aux = tile.image.split("");
@@ -413,19 +411,18 @@ export function setTileBoardPosition(
     } else {
       //we need to know if we are playing in the right or the left of the board (check pos value)
       if (pos === "left") {
-        if (!leftLimitReached) {
+        if (!constraints.leftLimitReached) {
           if (leftMargin < 100) {
             console.log("we need to go down");
-            leftLimitReached = true;
-            console.log("before:", newLeftTop);
+            constraints.leftLimitReached = true;
             setTileBoardVerticalPosition(
               leftMargin,
               rightMargin,
               tile,
               pos,
-              table
+              table,
+              constraints
             );
-            console.log("after:", newLeftTop);
           } else {
             //we play on the left
             leftMargin = leftMargin - 86;
@@ -435,7 +432,7 @@ export function setTileBoardPosition(
         } else {
           if (leftMargin < 100) {
             //is the first tile, so needs to be horizontal no matter what
-            tile.topPos = newLeftTop === 121 ? 77 : 98;
+            tile.topPos = constraints.newLeftTop === 121 ? 77 : 98;
             tile.leftPos = leftMargin;
             leftMargin = leftMargin + 86;
             let aux = tile.image.split("");
@@ -443,7 +440,7 @@ export function setTileBoardPosition(
             tile.position = "horizontal";
           } else {
             //we play normal tile in the opposite direction
-            tile.topPos = newLeftTop === 121 ? 77 : 98;
+            tile.topPos = constraints.newLeftTop === 121 ? 77 : 98;
             tile.leftPos = leftMargin;
             leftMargin = leftMargin + 86;
             let aux = tile.image.split("");
@@ -452,16 +449,16 @@ export function setTileBoardPosition(
           }
         }
       } else {
-        if (!rightLimitReached) {
+        if (!constraints.rightLimitReached) {
           if (rightMargin > 950) {
-            console.log("we need to go up");
-            rightLimitReached = true;
+            constraints.rightLimitReached = true;
             setTileBoardVerticalPosition(
               leftMargin,
               rightMargin,
               tile,
               pos,
-              table
+              table,
+              constraints
             );
           } else {
             tile.leftPos = rightMargin;
@@ -471,14 +468,14 @@ export function setTileBoardPosition(
         } else {
           if (rightMargin > 950) {
             //we need to play this horizontally no matter what
-            tile.topPos = newRightTop === 379 ? 379 : 358;
+            tile.topPos = constraints.newRightTop === 379 ? 379 : 358;
             rightMargin = rightMargin - 86;
             tile.leftPos = rightMargin;
             let aux = tile.image.split("");
             tile.image = aux[1] + aux[0];
             tile.position = "horizontal";
           } else {
-            tile.topPos = newRightTop === 379 ? 379 : 358;
+            tile.topPos = constraints.newRightTop === 379 ? 379 : 358;
             rightMargin = rightMargin - 86;
             tile.leftPos = rightMargin;
             let aux = tile.image.split("");
@@ -494,6 +491,7 @@ export function setTileBoardPosition(
     tile: tile,
     leftMargin: leftMargin,
     rightMargin: rightMargin,
+    constraints: constraints,
   };
 }
 
@@ -502,7 +500,8 @@ export function setTileBoardVerticalPosition(
   rightMargin,
   tile,
   pos,
-  table
+  table,
+  constraints
 ) {
   //we need to know if we are playing in the right or the left of the board (check pos value)
   if (pos === "left") {
@@ -510,14 +509,14 @@ export function setTileBoardVerticalPosition(
     if (table[0].leftValue === table[0].rightValue) {
       //tile we are going to attach is a double, values will be different
       tile.topPos = 207 - 86;
-      newLeftTop = 207 - 86;
+      constraints.newLeftTop = 207 - 86;
       tile.leftPos = leftMargin;
       tile.image =
         tile.leftValue === tile.rightValue ? tile.image : tile.image + "v";
       tile.position = "vertical";
     } else {
       tile.topPos = 228 - 86;
-      newLeftTop = 228 - 86;
+      constraints.newLeftTop = 228 - 86;
       tile.leftPos = leftMargin;
       tile.image =
         tile.leftValue === tile.rightValue ? tile.image : tile.image + "v";
@@ -528,7 +527,7 @@ export function setTileBoardVerticalPosition(
       table[table.length - 1].leftValue === table[table.length - 1].rightValue
     ) {
       tile.topPos = 207 + 86;
-      newRightTop = tile.topPos + 86;
+      constraints.newRightTop = tile.topPos + 86;
       rightMargin = rightMargin - 44;
       tile.leftPos = rightMargin;
       tile.image =
@@ -536,7 +535,7 @@ export function setTileBoardVerticalPosition(
       tile.position = "vertical";
     } else {
       tile.topPos = 228 + 44;
-      newRightTop = tile.topPos + 86;
+      constraints.newRightTop = tile.topPos + 86;
       rightMargin = rightMargin - 44;
       tile.leftPos = rightMargin;
       tile.image =
@@ -549,6 +548,7 @@ export function setTileBoardVerticalPosition(
     tile: tile,
     leftMargin: leftMargin,
     rightMargin: rightMargin,
+    constraints: constraints,
   };
 }
 

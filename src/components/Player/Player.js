@@ -59,7 +59,7 @@ function Player(props) {
       </div>
     );
   } else {
-    if (props.isGameOver) {
+    if (props.isRoundOver) {
       return (
         <div
           className={`${props.container}`}
