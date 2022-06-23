@@ -464,12 +464,31 @@ function BoardGame(props) {
           alignItems: "center",
         }}
       >
+        <button
+          onClick={() => prepareNextRound()}
+          style={{
+            backgroundColor: "#90ee90",
+            textAlign: "center",
+            borderRadius: "5px",
+            display: "inline-flex",
+            alignSelf: "flex-start",
+            color: "black",
+            height: "50px",
+            width: "100px",
+            marginTop: "30px",
+            marginRight: "50px",
+            // visibility: isRoundOver && props.isAdmin ? "visible" : "hidden",
+          }}
+        >
+          NEXT ROUND
+        </button>
         <Board table={table} boardTilePressed={boardTilePressed} />
         <Player
           isPlayer={true}
           hand={player1}
           playerPlaysTile={playerPlaysTile}
           isPlayerBlocked={isPlayer1Blocked}
+          name={player1Name}
           isHand={startingPlayer.current === props.playerId ? true : false}
           isMyTurn={props.playerId === currentTurn.current ? true : false}
         />
@@ -477,6 +496,8 @@ function BoardGame(props) {
           container={"player2_container"}
           style={"player2"}
           isPlayer={false}
+          name={player2Name}
+          nameClass={"player2_name"}
           hand={player2.hand ? JSON.parse(player2.hand) : player2}
           isPlayerBlocked={isPlayer2Blocked}
           tileStyle={"player_tile"}
@@ -504,6 +525,8 @@ function BoardGame(props) {
           style={"player3"}
           isPlayer={false}
           hand={player3.hand ? JSON.parse(player3.hand) : player3}
+          name={player3Name}
+          nameClass={"player3_name"}
           isRoundOver={isRoundOver}
           isPlayerBlocked={isPlayer3Blocked}
           tileStyle={"player_tile"}
@@ -530,6 +553,8 @@ function BoardGame(props) {
           style={"player4"}
           isPlayer={false}
           hand={player4.hand ? JSON.parse(player4.hand) : player4}
+          name={player4Name}
+          nameClass={"player4_name"}
           isRoundOver={isRoundOver}
           isPlayerBlocked={isPlayer4Blocked}
           tileStyle={"player_tile"}

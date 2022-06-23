@@ -42,7 +42,21 @@
     align-self: center;
     justify-content: flex-start;
     margin-left: 40px;
+    margin-bottom: 25px;
     position: absolute;
+}
+
+.player1_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    line-height: 30px;
+    margin-top: 75px;
+    margin-left: 20px;
 }
 /* ======================================================= */
 .player2_container {
@@ -87,8 +101,22 @@
     border-radius: 50%;
     display: inline-block;
     left: 4%;
-    top: 40%;
+    top: 80%;
     position: absolute;
+}
+
+.player2_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    margin-left: -4px;
+    margin-top: 40px;
+    transform: rotate(270deg);
+    line-height: 30px;
 }
 /* ======================================================= */
 .player3_container {
@@ -106,7 +134,7 @@
     width: 406px;
     height: 100px;
     position: absolute;
-    left: 12%;
+    left: 15%;
     top: 8%;
 }
 .player3_blocked {
@@ -127,9 +155,22 @@
     width: 20px;
     background: #FFA200;
     border-radius: 50%;
-    top: 38%;
+    top: 52%;
     left: 6%;
     position: absolute;
+}
+.player3_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    line-height: 30px;
+    transition: all 1s;
+    top: 15%;
+    left: 2%;
 }
 /* ======================================================= */
 .player4_container {
@@ -167,8 +208,20 @@
     width: 20px;
     background: #FFA200;
     border-radius: 50%;
-    display: inline-block;
-    top: 38%;
-    left: 4%;
+    margin-top: 2px;
+    margin-left: 20px;
     position: absolute;
+}
+.player4_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    margin-left: -4px;
+    margin-top: 45px;
+    transform: rotate(270deg);
+    line-height: 30px;
 }
