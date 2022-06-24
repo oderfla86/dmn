@@ -19,7 +19,7 @@ function Score(props) {
           fontSize: "7px",
         }}
       >
-        v0.9.1
+        v0.9.2
       </div>
       <hr />
       <div>

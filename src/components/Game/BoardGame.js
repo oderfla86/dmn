@@ -309,9 +309,10 @@ function BoardGame(props) {
     }
 
     let sidePlayed = ""; // "left true, right false"
-    if (table.length === 1 || tile.leftValue !== tile.rightValue) {
+    if (table.length === 1 && tile.leftValue !== tile.rightValue) {
       sidePlayed = selectedTile.current.canPlayLeft ? true : false;
     } else {
+      //revisar si puede jugar por los dos lados en ves de solo la izq
       sidePlayed = tile.id === table[0].id ? true : false;
     }
 
