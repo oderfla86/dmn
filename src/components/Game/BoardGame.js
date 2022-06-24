@@ -99,12 +99,13 @@ function BoardGame(props) {
       debugger;
       let boardState = snapshot.val();
       if (boardState) {
+        setIsRoundOver(boardState.isRoundOver);
         originalOrder.current = JSON.parse(boardState.order);
         playersOrderLocal.current = getLocalOrderOfPlayers(
           JSON.parse(boardState.order),
           props.playerId
         );
-
+        setP1(JSON.parse(playersOrderLocal.current[0].hand));
         setP2(playersOrderLocal.current[1]);
         setP3(playersOrderLocal.current[2]);
         setP4(playersOrderLocal.current[3]);
@@ -123,7 +124,7 @@ function BoardGame(props) {
         constraints.current.newRightTop = boardState.newRightTop;
 
         if (boardState.isRoundOver) {
-          setIsRoundOver(true);
+          // setIsRoundOver(true);
           if (
             JSON.parse(originalOrder.current[0].hand).length > 0 &&
             JSON.parse(originalOrder.current[1].hand).length > 0 &&
@@ -211,12 +212,12 @@ function BoardGame(props) {
       console.info(`${team1Name} : ${team1.current}`);
       console.info(`${team2Name} : ${team2.current}`);
     } else {
+      setIsRoundOver(false);
       props.createNewHands(
         originalOrder.current,
         startingPlayer.current,
         currentRound.current
       );
-      setIsRoundOver(false);
     }
   }
 
