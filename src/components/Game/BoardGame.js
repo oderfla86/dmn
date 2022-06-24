@@ -307,12 +307,20 @@ function BoardGame(props) {
         isPlayerBlocked: false,
       });
     }
+
+    let sidePlayed = ""; // "left true, right false"
+    if (table.length === 1 || tile.leftValue !== tile.rightValue) {
+      sidePlayed = selectedTile.current.canPlayLeft ? true : false;
+    } else {
+      sidePlayed = tile.id === table[0].id ? true : false;
+    }
+
     let updatedPlayStatus = placePlayerTile(
       selectedTile.current,
       leftLeaf.current,
       rightLeaf.current,
       table,
-      tile.id === table[0].id ? true : false,
+      sidePlayed,
       leftMargin.current,
       rightMargin.current,
       constraints.current
