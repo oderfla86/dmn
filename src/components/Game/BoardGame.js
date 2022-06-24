@@ -477,7 +477,7 @@ function BoardGame(props) {
             width: "100px",
             marginTop: "30px",
             marginRight: "50px",
-            // visibility: isRoundOver && props.isAdmin ? "visible" : "hidden",
+            visibility: isRoundOver && props.isAdmin ? "visible" : "hidden",
           }}
         >
           NEXT ROUND
