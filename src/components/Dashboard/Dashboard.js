@@ -185,7 +185,7 @@ function Dashboard(props) {
           position: "relative",
         }}
       >
-        <label>DMN - beta v0.9.0</label>
+        <label>DMN - beta v0.9.1</label>
       </div>
       <div
         style={{
