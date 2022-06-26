@@ -45,6 +45,7 @@ function Game(props) {
   const [team1Points, setTeam1Points] = useState(team1.current);
   const [team2Points, setTeam2Points] = useState(team2.current);
   const [isHand, setIsHand] = useState(null);
+  const [currentTurn, setCurrentTurn] = useState(props.data.currentTurn);
 
   useEffect(() => {
     console.log("STARTING NEW ROUND");
@@ -62,6 +63,7 @@ function Game(props) {
         player4
       );
       setIsHand(startingPlayer.current);
+      setCurrentTurn(startingPlayer.current);
       if (startingPlayer.current !== 0) {
         console.log("Player starting:", startingPlayer.current);
         simulateOtherPlayersTurn(startingPlayer.current);
@@ -212,6 +214,7 @@ function Game(props) {
   async function simulateOtherPlayersTurn(turn) {
     setPlayer1([...disablePlayerHand(player1)]);
     while (turn < 4) {
+      setCurrentTurn(turn);
       await timeout(DELAY);
       let simulationTurn = searchTileForSimulation(
         getPlayerHand(turn),
@@ -305,6 +308,7 @@ function Game(props) {
       }
     }
     if (!gameOver.current) {
+      setCurrentTurn(0);
       let playerTurnCheck = tilesAvailableForPlayer(
         player1,
         leftLeaf.current,
@@ -380,6 +384,7 @@ function Game(props) {
         <Player
           isPlayer={true}
           hand={player1}
+          isMyTurn={currentTurn === 0 ? true : false}
           playerPlaysTile={playerPlaysTile}
           isGameOver={isGameOver}
           isPlayerBlocked={isPlayer1Blocked}
@@ -389,6 +394,7 @@ function Game(props) {
           container={"player2_container"}
           style={"player2"}
           isPlayer={false}
+          isMyTurn={currentTurn === 1 ? true : false}
           hand={player2}
           isGameOver={isGameOver}
           isPlayerBlocked={isPlayer2Blocked}
@@ -407,6 +413,7 @@ function Game(props) {
           container={"player3_container"}
           style={"player3"}
           isPlayer={false}
+          isMyTurn={currentTurn === 2 ? true : false}
           hand={player3}
           isGameOver={isGameOver}
           isPlayerBlocked={isPlayer3Blocked}
@@ -425,6 +432,7 @@ function Game(props) {
           container={"player4_container"}
           style={"player4"}
           isPlayer={false}
+          isMyTurn={currentTurn === 3 ? true : false}
           hand={player4}
           isGameOver={isGameOver}
           isPlayerBlocked={isPlayer4Blocked}

@@ -17,6 +17,7 @@ function App() {
     newState.team1Points = team1Points;
     newState.team2Points = team2Points;
     newState.startingPlayer = currentPlayer + 1 < 4 ? currentPlayer + 1 : 0;
+    newState.currentTurn = newState.startingPlayer;
     setInitialSate(newState);
     setIsLoading(false);
   }

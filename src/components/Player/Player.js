@@ -4,7 +4,14 @@ function Player(props) {
   const images = require.context("../../resources", true);
   if (props.isPlayer) {
     return (
-      <div className="player1_container">
+      <div
+        className="player1_container"
+        style={{
+          borderColor: props.isMyTurn ? "coral" : null,
+          borderStyle: props.isMyTurn ? "solid" : null,
+          borderWidth: "3px",
+        }}
+      >
         <div className="player1">
           {props.hand.map(function (player_tile) {
             return (
@@ -59,7 +66,14 @@ function Player(props) {
   } else {
     if (props.isGameOver) {
       return (
-        <div className={`${props.container}`}>
+        <div
+          className={`${props.container}`}
+          style={{
+            borderColor: props.isMyTurn ? "coral" : null,
+            borderStyle: props.isMyTurn ? "solid" : null,
+            borderWidth: "3px",
+          }}
+        >
           <div className={`${props.style}`}>
             {props.hand.map(function (player_tile) {
               return (
@@ -94,7 +108,14 @@ function Player(props) {
       );
     } else {
       return (
-        <div className={`${props.container}`}>
+        <div
+          className={`${props.container}`}
+          style={{
+            borderColor: props.isMyTurn ? "coral" : null,
+            borderStyle: props.isMyTurn ? "solid" : null,
+            borderWidth: "3px",
+          }}
+        >
           <div className={`${props.style}`}>
             {props.hand.map(function (player_tile) {
               return (
