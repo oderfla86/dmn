@@ -1,4 +1,6 @@
 import "./Player.css";
+import "../Tile/Tile";
+import Tile from "../Tile/Tile";
 
 function Player(props) {
   const images = require.context("../../resources", true);
@@ -15,34 +17,10 @@ function Player(props) {
         <div className="player1">
           {props.hand.map(function (player_tile) {
             return (
-              <button
-                style={{
-                  borderColor: player_tile.isSelected
-                    ? "#90ee90"
-                    : player_tile.isStartingTile
-                    ? "#FFA200"
-                    : "black",
-                  background: "transparent",
-                  padding: "0",
-                  width: "52px",
-                  height: "94px",
-                  marginRight: "15px",
-                }}
-                onClick={() => props.playerPlaysTile(player_tile)}
-                disabled={!player_tile.enabled}
-                key={player_tile.name}
-              >
-                <img
-                  width={"48px"}
-                  height={"90px"}
-                  disabled={!player_tile.enabled}
-                  src={
-                    player_tile.leftValue === player_tile.rightValue
-                      ? images(`./${player_tile.image}.png`)
-                      : images(`./${player_tile.image}v.png`)
-                  }
-                />
-              </button>
+              <Tile
+                playerTile={player_tile}
+                playerPlaysTile={props.playerPlaysTile}
+              />
             );
           })}
         </div>

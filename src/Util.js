@@ -273,8 +273,8 @@ export function tilesAvailableForPlayer(
   for (let i = 0; i < playerHand.length; i++) {
     playerHand[i].canPlayLeft = false;
     playerHand[i].canPlayRight = false;
-    if (currentTurn != undefined) {
-      if (currentTurn == 0) {
+    if (currentTurn !== undefined) {
+      if (currentTurn === 0) {
         if (playerHand[i].id !== "6:6") {
           playerHand[i].enabled = false;
           blocked = false;
