@@ -3,7 +3,7 @@ import "../Tile/Tile";
 import Tile from "../Tile/Tile";
 
 function Player(props) {
-  const images = require.context("../../resources", true);
+  const images = require.context("../../../resources", true);
   if (props.isPlayer) {
     return (
       <div
@@ -52,7 +52,7 @@ function Player(props) {
             borderWidth: "3px",
           }}
         >
-          <div className={`${props.style}`}>
+          <div className={`${props.playerStyle}`}>
             {props.hand.map(function (player_tile) {
               return (
                 <button
@@ -94,7 +94,7 @@ function Player(props) {
             borderWidth: "3px",
           }}
         >
-          <div className={`${props.style}`}>
+          <div className={`${props.playerStyle}`}>
             {props.hand.map(function (player_tile) {
               return (
                 <button

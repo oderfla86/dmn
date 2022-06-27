@@ -1,0 +1,226 @@
+.player1_container {
+    background-color: rgba(0, 0, 0, 0.117);
+    border-radius: 10px;
+    width: 700px;
+    height: 115px;
+    display: flex;
+    align-self: flex-end;
+    margin-bottom: 5px;
+}
+.player1 {
+    width: 470px;
+    height: 95px;
+    top: 10%;
+    left: 15%;
+    position: relative;
+}
+.player1_tile {
+    width: 80px;
+    height: 120px;
+    margin-right: 5px;
+    border-color: transparent;
+}
+.player1_blocked {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: relative;
+    margin-top: 40px;
+    margin-left: 125px;
+    line-height: 30px;
+    transition: all 1s;
+}
+.player1_isHand {
+    height: 30px;
+    width: 30px;
+    background: #FFA200;
+    border-radius: 50%;
+    display: flex;
+    align-self: center;
+    justify-content: flex-start;
+    margin-left: 40px;
+    margin-bottom: 25px;
+    position: absolute;
+}
+
+.player1_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    line-height: 30px;
+    margin-top: 75px;
+    margin-left: 20px;
+}
+/* ======================================================= */
+.player2_container {
+    background-color: rgba(0, 0, 0, 0.117);
+    border-radius: 10px;
+    width: 500px;
+    height: 120px;
+    position: absolute;
+    transform: rotate(90deg) translate(0, -620px);
+}
+.player2 {
+    background-color: transparent;
+    width: 406px;
+    height: 100px;
+    position: absolute;
+    left: 10%;
+    top: 13%;
+}
+.player_tile{
+    width: 40px;
+    height: 82px;
+    margin-right: 17px;
+}
+.player2_blocked {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 94%;
+    transform: translate(-50%, -50%) rotate(270deg);
+    line-height: 30px;
+    transition: all 1s;
+}
+.player2_isHand {
+    height: 20px;
+    width: 20px;
+    background: #FFA200;
+    border-radius: 50%;
+    display: inline-block;
+    left: 4%;
+    top: 80%;
+    position: absolute;
+}
+
+.player2_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    margin-left: -4px;
+    margin-top: 40px;
+    transform: rotate(270deg);
+    line-height: 30px;
+}
+/* ======================================================= */
+.player3_container {
+    background-color: rgba(0, 0, 0, 0.117);
+    border-radius: 10px;
+    width: 550px;
+    height: 100px;
+    position: absolute;
+    display: flex;
+    align-self: flex-start;
+    margin-top: 5px;
+}
+.player3 {
+    background-color: transparent;
+    width: 406px;
+    height: 100px;
+    position: absolute;
+    left: 15%;
+    top: 8%;
+}
+.player3_blocked {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    left: 85%;
+    top: 33%;
+    line-height: 30px;
+    transition: all 1s;
+}
+.player3_isHand {
+    height: 20px;
+    width: 20px;
+    background: #FFA200;
+    border-radius: 50%;
+    top: 52%;
+    left: 6%;
+    position: absolute;
+}
+.player3_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    line-height: 30px;
+    transition: all 1s;
+    top: 15%;
+    left: 2%;
+}
+/* ======================================================= */
+.player4_container {
+    background-color: rgba(0, 0, 0, 0.117);
+    border-radius: 10px;
+    width: 500px;
+    height: 120px;
+    position: absolute;
+    transform: rotate(90deg) translate(0, 620px);
+}
+.player4 {
+    background-color: transparent;
+    width: 500px;
+    height: 100px;
+    position: absolute;
+    left: 10%;
+    top: 13%;
+}
+.player4_blocked {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    left: 94%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(270deg);
+    line-height: 30px;
+    transition: all 1s;
+}
+.player4_isHand {
+    height: 20px;
+    width: 20px;
+    background: #FFA200;
+    border-radius: 50%;
+    margin-top: 52px;
+    position: absolute;
+}
+.player4_name {
+    background-color: #36454F;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    width: 70px;
+    height: 30px;
+    position: absolute;
+    margin-left: -4px;
+    margin-top: 45px;
+    transform: rotate(270deg);
+    line-height: 30px;
+}

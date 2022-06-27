@@ -8,7 +8,7 @@ function Score(props) {
         position: "absolute",
         color: "white",
         width: "145px",
-        height: "90px",
+        height: "95px",
         marginTop: "-640px",
         marginLeft: "850px",
       }}
@@ -19,11 +19,15 @@ function Score(props) {
           fontSize: "7px",
         }}
       >
-        v1.0.0
+        b0.9.5
       </div>
       <hr />
-      <div>TEAM 1 - {props.team1Points}</div>
-      <div>TEAM 2 - {props.team2Points}</div>
+      <div>
+        {props.team1Name} - {props.team1Points}
+      </div>
+      <div>
+        {props.team2Name} - {props.team2Points}
+      </div>
     </div>
   );
 }
