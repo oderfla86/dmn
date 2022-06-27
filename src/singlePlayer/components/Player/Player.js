@@ -52,7 +52,7 @@ function Player(props) {
             borderWidth: "3px",
           }}
         >
-          <div className={`${props.playerStyle}`}>
+          <div className={`${props.style}`}>
             {props.hand.map(function (player_tile) {
               return (
                 <button
@@ -94,7 +94,7 @@ function Player(props) {
             borderWidth: "3px",
           }}
         >
-          <div className={`${props.playerStyle}`}>
+          <div className={`${props.style}`}>
             {props.hand.map(function (player_tile) {
               return (
                 <button

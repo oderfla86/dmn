@@ -387,7 +387,7 @@ function Game(props) {
         />
         <Player
           container={"player2_container"}
-          playerStyle={"player2"}
+          style={"player2"}
           isPlayer={false}
           hand={player2}
           isGameOver={isGameOver}
@@ -405,7 +405,7 @@ function Game(props) {
         />
         <Player
           container={"player3_container"}
-          playerStyle={"player3"}
+          style={"player3"}
           isPlayer={false}
           hand={player3}
           isGameOver={isGameOver}
@@ -423,7 +423,7 @@ function Game(props) {
         />
         <Player
           container={"player4_container"}
-          playerStyle={"player4"}
+          style={"player4"}
           isPlayer={false}
           hand={player4}
           isGameOver={isGameOver}
