@@ -1,6 +1,4 @@
 import "./Player.css";
-import "../Tile/Tile";
-import Tile from "../Tile/Tile";
 
 function Player(props) {
   const images = require.context("../../../resources", true);
@@ -11,16 +9,36 @@ function Player(props) {
         style={{
           borderColor: props.isMyTurn ? "coral" : null,
           borderStyle: props.isMyTurn ? "solid" : null,
-          borderWidth: "3px",
         }}
       >
         <div className="player1">
           {props.hand.map(function (player_tile) {
             return (
-              <Tile
-                playerTile={player_tile}
-                playerPlaysTile={props.playerPlaysTile}
-              />
+              <button
+                style={{
+                  borderColor: player_tile.isSelected ? "#90ee90" : "black",
+                  background: "transparent",
+                  padding: "0",
+                  width: "52px",
+                  height: "94px",
+                  marginRight: "15px",
+                }}
+                onClick={() => props.playerPlaysTile(player_tile)}
+                disabled={!player_tile.enabled}
+                key={player_tile.name}
+              >
+                <img
+                  width={"48px"}
+                  height={"90px"}
+                  alt="Player Tile"
+                  disabled={!player_tile.enabled}
+                  src={
+                    player_tile.leftValue === player_tile.rightValue
+                      ? images(`./${player_tile.image}.png`)
+                      : images(`./${player_tile.image}v.png`)
+                  }
+                />
+              </button>
             );
           })}
         </div>
@@ -36,20 +54,28 @@ function Player(props) {
         <span
           className="player1_isHand"
           style={{
-            visibility: props.isHand === 0 ? "visible" : "hidden",
+            visibility: props.isHand ? "visible" : "hidden",
           }}
         ></span>
+        <div
+          className="player1_name"
+          style={{
+            opacity: "1",
+            visibility: "visible",
+          }}
+        >
+          {props.name}
+        </div>
       </div>
     );
   } else {
-    if (props.isGameOver) {
+    if (props.isRoundOver) {
       return (
         <div
           className={`${props.container}`}
           style={{
             borderColor: props.isMyTurn ? "coral" : null,
             borderStyle: props.isMyTurn ? "solid" : null,
-            borderWidth: "3px",
           }}
         >
           <div className={`${props.playerStyle}`}>
@@ -67,6 +93,7 @@ function Player(props) {
                   <img
                     width={"40px"}
                     height={"82px"}
+                    alt="Player Tile"
                     disabled={!player_tile.enabled}
                     src={
                       player_tile.leftValue === player_tile.rightValue
@@ -82,6 +109,15 @@ function Player(props) {
             className={`${props.handClass}`}
             style={props.isHandStyle}
           ></span>
+          <div
+            className={props.nameClass}
+            style={{
+              opacity: "1",
+              visibility: "visible",
+            }}
+          >
+            {props.name}
+          </div>
         </div>
       );
     } else {
@@ -91,7 +127,6 @@ function Player(props) {
           style={{
             borderColor: props.isMyTurn ? "coral" : null,
             borderStyle: props.isMyTurn ? "solid" : null,
-            borderWidth: "3px",
           }}
         >
           <div className={`${props.playerStyle}`}>
@@ -112,6 +147,15 @@ function Player(props) {
             className={`${props.handClass}`}
             style={props.isHandStyle}
           ></span>
+          <div
+            className={props.nameClass}
+            style={{
+              opacity: "1",
+              visibility: "visible",
+            }}
+          >
+            {props.name}
+          </div>
         </div>
       );
     }

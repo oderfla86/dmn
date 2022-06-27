@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SinglePlayerApp from "./singlePlayer/SinglePlayerApp";
+import MultiPlayerApp from "./multiplayer/MultiPlayerApp";
 
 function Home() {
   const [mode, setMode] = useState(null);
@@ -43,6 +44,7 @@ function Home() {
           }}
         >
           <button onClick={() => singlePlayerMode()}>Single Player</button>
+          <label>DMN - b0.9.5</label>
           <button onClick={() => multiPlayerMode()}>Multiplayer</button>
         </div>
       </div>
@@ -50,7 +52,7 @@ function Home() {
   } else if (mode === "single") {
     return <SinglePlayerApp />;
   } else {
-    //multiplayer
+    return <MultiPlayerApp />;
   }
 }
 

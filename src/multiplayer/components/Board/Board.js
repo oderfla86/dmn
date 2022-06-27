@@ -39,7 +39,6 @@ function Board(props) {
               <img
                 width={"40px"}
                 height={"82px"}
-                alt="Board Tile"
                 disabled={!table_tile.enabled}
                 src={images(`./${table_tile.image}.png`)}
               />
@@ -71,7 +70,6 @@ function Board(props) {
               <img
                 width={"82px"}
                 height={"40px"}
-                alt="Board Tile"
                 disabled={!table_tile.enabled}
                 src={images(`./${table_tile.image}.png`)}
               />
