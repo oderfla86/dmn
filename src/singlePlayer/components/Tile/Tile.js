@@ -1,5 +1,5 @@
 function Tile(props) {
-  const images = require.context("../../resources", true);
+  const images = require.context("../../../resources", true);
   return (
     <button
       style={{

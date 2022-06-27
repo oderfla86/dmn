@@ -1,5 +1,5 @@
 function Board(props) {
-  const images = require.context("../../resources", true);
+  const images = require.context("../../../resources", true);
   return (
     <div
       style={{

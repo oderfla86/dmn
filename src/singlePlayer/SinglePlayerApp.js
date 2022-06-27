@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Game from "./components/Game/Game";
 import { createGame } from "./Util";
 
-function App() {
+function SinglePlayerApp() {
   const [isLoading, setIsLoading] = useState(true);
   const [initialSate, setInitialSate] = useState(null);
 
@@ -35,4 +35,4 @@ function App() {
   );
 }
 
-export default App;
+export default SinglePlayerApp;

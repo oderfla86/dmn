@@ -3,7 +3,7 @@ import "../Tile/Tile";
 import Tile from "../Tile/Tile";
 
 function Player(props) {
-  const images = require.context("../../resources", true);
+  const images = require.context("../../../resources", true);
   if (props.isPlayer) {
     return (
       <div
